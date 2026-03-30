@@ -1,0 +1,658 @@
+{
+  "groups": [
+    {
+      "name": "spring.ai.dashscope",
+      "type": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeConnectionProperties",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeConnectionProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.agent",
+      "type": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAgentProperties",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAgentProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.agent.options",
+      "type": "com.alibaba.cloud.ai.dashscope.agent.DashScopeAgentOptions",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAgentProperties",
+      "sourceMethod": "getOptions()"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.synthesis",
+      "type": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAudioSpeechSynthesisProperties",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAudioSpeechSynthesisProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.synthesis.options",
+      "type": "com.alibaba.cloud.ai.dashscope.audio.DashScopeSpeechSynthesisOptions",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAudioSpeechSynthesisProperties",
+      "sourceMethod": "getOptions()"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.transcription",
+      "type": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAudioTranscriptionProperties",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAudioTranscriptionProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.transcription.options",
+      "type": "com.alibaba.cloud.ai.dashscope.audio.DashScopeAudioTranscriptionOptions",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAudioTranscriptionProperties",
+      "sourceMethod": "getOptions()"
+    },
+    {
+      "name": "spring.ai.dashscope.chat",
+      "type": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeChatProperties",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeChatProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options",
+      "type": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeChatProperties",
+      "sourceMethod": "getOptions()"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.tool-choice",
+      "type": "java.lang.Object",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions",
+      "sourceMethod": "getToolChoice()"
+    },
+    {
+      "name": "spring.ai.dashscope.embedding",
+      "type": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeEmbeddingProperties",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeEmbeddingProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.embedding.options",
+      "type": "com.alibaba.cloud.ai.dashscope.embedding.DashScopeEmbeddingOptions",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeEmbeddingProperties",
+      "sourceMethod": "getOptions()"
+    },
+    {
+      "name": "spring.ai.dashscope.image",
+      "type": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeImageProperties",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeImageProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options",
+      "type": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeImageProperties",
+      "sourceMethod": "getOptions()"
+    },
+    {
+      "name": "spring.ai.dashscope.rerank",
+      "type": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeRerankProperties",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeRerankProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.rerank.options",
+      "type": "com.alibaba.cloud.ai.dashscope.rerank.DashScopeRerankOptions",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeRerankProperties",
+      "sourceMethod": "getOptions()"
+    }
+  ],
+  "properties": [
+    {
+      "name": "spring.ai.dashscope.agent.options.app-id",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.agent.DashScopeAgentOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.agent.options.biz-params",
+      "type": "com.fasterxml.jackson.databind.JsonNode",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.agent.DashScopeAgentOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.agent.options.flow-stream-mode",
+      "type": "com.alibaba.cloud.ai.dashscope.agent.DashScopeAgentFlowStreamMode",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.agent.DashScopeAgentOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.agent.options.has-thoughts",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.agent.DashScopeAgentOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.agent.options.images",
+      "type": "java.util.List<java.lang.String>",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.agent.DashScopeAgentOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.agent.options.incremental-output",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.agent.DashScopeAgentOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.agent.options.memory-id",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.agent.DashScopeAgentOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.agent.options.rag-options",
+      "type": "com.alibaba.cloud.ai.dashscope.agent.DashScopeAgentRagOptions",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.agent.DashScopeAgentOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.agent.options.session-id",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.agent.DashScopeAgentOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.agent.options.stop-sequences",
+      "type": "java.util.List<java.lang.String>",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.agent.DashScopeAgentOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.api-key",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeConnectionProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.synthesis.api-key",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAudioSpeechSynthesisProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.synthesis.base-url",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAudioSpeechSynthesisProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.synthesis.options.enable-phoneme-timestamp",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeSpeechSynthesisOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.synthesis.options.enable-word-timestamp",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeSpeechSynthesisOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.synthesis.options.model",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeSpeechSynthesisOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.synthesis.options.pitch",
+      "type": "java.lang.Double",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeSpeechSynthesisOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.synthesis.options.response-format",
+      "type": "com.alibaba.cloud.ai.dashscope.api.DashScopeSpeechSynthesisApi$ResponseFormat",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeSpeechSynthesisOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.synthesis.options.sample-rate",
+      "type": "java.lang.Integer",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeSpeechSynthesisOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.synthesis.options.speed",
+      "type": "java.lang.Float",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeSpeechSynthesisOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.synthesis.options.text",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeSpeechSynthesisOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.synthesis.options.voice",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeSpeechSynthesisOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.synthesis.options.volume",
+      "type": "java.lang.Integer",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeSpeechSynthesisOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.synthesis.secret-key",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAudioSpeechSynthesisProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.synthesis.workspace-id",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAudioSpeechSynthesisProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.transcription.api-key",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAudioTranscriptionProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.transcription.base-url",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAudioTranscriptionProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.transcription.options.channel-id",
+      "type": "java.util.List<java.lang.Integer>",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeAudioTranscriptionOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.transcription.options.disfluency-removal-enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeAudioTranscriptionOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.transcription.options.format",
+      "type": "com.alibaba.cloud.ai.dashscope.audio.DashScopeAudioTranscriptionOptions$AudioFormat",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeAudioTranscriptionOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.transcription.options.language-hints",
+      "type": "java.util.List<java.lang.String>",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeAudioTranscriptionOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.transcription.options.model",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeAudioTranscriptionOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.transcription.options.phrase-id",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeAudioTranscriptionOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.transcription.options.sample-rate",
+      "type": "java.lang.Integer",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeAudioTranscriptionOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.transcription.options.vocabulary-id",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.audio.DashScopeAudioTranscriptionOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.transcription.secret-key",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAudioTranscriptionProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.audio.transcription.workspace-id",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAudioTranscriptionProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.base-url",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeConnectionProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.api-key",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeChatProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.base-url",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeChatProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable Dashscope ai chat client.",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeChatProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.enable-search",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.enable-thinking",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.incremental-output",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.internal-tool-execution-enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.model",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.multi-model",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.repetition-penalty",
+      "type": "java.lang.Double",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.response-format",
+      "type": "com.alibaba.cloud.ai.dashscope.api.DashScopeResponseFormat",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.seed",
+      "type": "java.lang.Integer",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.stop",
+      "type": "java.util.List<java.lang.Object>",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.stop-sequences",
+      "type": "java.util.List<java.lang.String>",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.stream",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.temperature",
+      "type": "java.lang.Double",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.tool-callbacks",
+      "type": "java.util.List<org.springframework.ai.tool.ToolCallback>",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.tool-context",
+      "type": "java.util.Map<java.lang.String,java.lang.Object>",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.tool-names",
+      "type": "java.util.Set<java.lang.String>",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.tools",
+      "type": "java.util.List<com.alibaba.cloud.ai.dashscope.api.DashScopeApi$FunctionTool>",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.top-k",
+      "type": "java.lang.Integer",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.top-p",
+      "type": "java.lang.Double",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.options.vl-high-resolution-images",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.secret-key",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeChatProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.chat.workspace-id",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeChatProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.embedding.api-key",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeEmbeddingProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.embedding.base-url",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeEmbeddingProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.embedding.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable Dashscope embedding client.",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeEmbeddingProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "spring.ai.dashscope.embedding.metadata-mode",
+      "type": "org.springframework.ai.document.MetadataMode",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeEmbeddingProperties",
+      "defaultValue": "embed"
+    },
+    {
+      "name": "spring.ai.dashscope.embedding.options.dimensions",
+      "type": "java.lang.Integer",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.embedding.DashScopeEmbeddingOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.embedding.options.model",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.embedding.DashScopeEmbeddingOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.embedding.options.text-type",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.embedding.DashScopeEmbeddingOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.embedding.secret-key",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeEmbeddingProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.embedding.workspace-id",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeEmbeddingProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.image.api-key",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeImageProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.image.base-url",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeImageProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.image.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable DashScope ai images client.",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeImageProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.base-image-url",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.function",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.height",
+      "type": "java.lang.Integer",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.mask-color",
+      "type": "java.lang.Integer[][]",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.mask-image-url",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.model",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.n",
+      "type": "java.lang.Integer",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.negative-prompt",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.prompt-extend",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.ref-img",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.ref-mode",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.ref-strength",
+      "type": "java.lang.Float",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.seed",
+      "type": "java.lang.Integer",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.sketch-color",
+      "type": "java.lang.Integer[][]",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.sketch-extraction",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.sketch-image-url",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.sketch-weight",
+      "type": "java.lang.Integer",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.style",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.watermark",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.width",
+      "type": "java.lang.Integer",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.image.secret-key",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeImageProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.image.workspace-id",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeImageProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.read-timeout",
+      "type": "java.lang.Integer",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeConnectionProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.rerank.api-key",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeRerankProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.rerank.base-url",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeRerankProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.rerank.options.model",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.rerank.DashScopeRerankOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.rerank.options.return-documents",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.rerank.DashScopeRerankOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.rerank.options.top-n",
+      "type": "java.lang.Integer",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.rerank.DashScopeRerankOptions"
+    },
+    {
+      "name": "spring.ai.dashscope.rerank.return-documents",
+      "type": "java.lang.Boolean",
+      "description": "If need to return original documents.",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeRerankProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "spring.ai.dashscope.rerank.secret-key",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeRerankProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.rerank.top-n",
+      "type": "java.lang.Integer",
+      "description": "Top n rerank results.",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeRerankProperties",
+      "defaultValue": 5
+    },
+    {
+      "name": "spring.ai.dashscope.rerank.workspace-id",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeRerankProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.secret-key",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeConnectionProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.workspace-id",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeConnectionProperties"
+    },
+    {
+      "name": "spring.ai.dashscope.image.options.size",
+      "type": "java.lang.String",
+      "sourceType": "com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions",
+      "deprecated": true,
+      "deprecation": {}
+    }
+  ],
+  "hints": []
+}

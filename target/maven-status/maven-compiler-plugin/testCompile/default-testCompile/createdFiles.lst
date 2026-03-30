@@ -1,0 +1,4 @@
+com/opspilot/controller/ChatControllerTest.class
+com/opspilot/service/ChatServiceTest.class
+com/opspilot/OpsPilotApplicationTests.class
+com/opspilot/service/RagServiceTest.class

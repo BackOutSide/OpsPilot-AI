@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: opspilot-ai
+
+  ai:
+    # ─── Alibaba Cloud DashScope ────────────────────────────────────────────────
+    dashscope:
+      api-key: ${DASHSCOPE_API_KEY:your-api-key-here}
+      chat:
+        options:
+          model: qwen-max
+          temperature: 0.7
+      embedding:
+        options:
+          model: text-embedding-v2
+
+    # ─── Milvus Vector Store ──────────────────────────────────────────────────
+    # Leave MILVUS_HOST unset (empty) to use the in-memory fallback store.
+    # Set MILVUS_HOST to a real host (e.g. "localhost") to enable Milvus.
+    vectorstore:
+      milvus:
+        client:
+          host: ${MILVUS_HOST:}
+          port: ${MILVUS_PORT:19530}
+          username: ${MILVUS_USERNAME:}
+          password: ${MILVUS_PASSWORD:}
+        database-name: ${MILVUS_DATABASE:opspilot}
+        collection-name: knowledge_base
+        embedding-dimension: 1536
+        index-type: IVF_FLAT
+        metric-type: COSINE
+        initialize-schema: true
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.opspilot: DEBUG
+    org.springframework.ai: INFO
