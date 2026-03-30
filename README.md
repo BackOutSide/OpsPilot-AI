@@ -1,4 +1,4 @@
-# SuperBizAgent
+# OpsPilot-AI
 
 > 基于 Spring Boot + AI Agent 的智能问答与运维系统
 
@@ -33,8 +33,8 @@
 
 ## 📦 核心模块
 
-```
-SuperBizAgent/
+``` 
+OpsPilot-AI/
 ├── src/main/java/org/example/
 │   ├── controller/
 │   │   └── ChatController.java        # 统一接口控制器 ⭐

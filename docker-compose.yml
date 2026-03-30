@@ -1,4 +1,4 @@
-# SuperBizAgent + Milvus standalone (etcd + minio + milvus)
+# OpsPilot-AI + Milvus standalone (etcd + minio + milvus)
 # 使用方式：
 #   1. 设置 DashScope API Key（必填，用于对话与向量化）
 #      set DASHSCOPE_API_KEY=sk-xxxx
@@ -73,7 +73,7 @@ services:
 
   app:
     build: .
-    image: superbiz-agent:local
+    image: opspilot-ai:local
     ports:
       - "9900:9900"
     environment:
