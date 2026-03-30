@@ -43,7 +43,7 @@ public class ChatClientConfig {
 
     /**
      * In-memory short-term conversation store backed by {@link MessageWindowChatMemory}.
-     * Retains the last 20 messages per conversation.
+     * Retains up to 20 total messages (user + assistant combined) per conversation.
      * Replace with a persistent store (e.g. Redis-backed) for multi-node deployments.
      */
     @Bean

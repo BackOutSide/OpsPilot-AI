@@ -36,8 +36,9 @@ public class RagService {
     /**
      * Ingest a knowledge document into the vector store.
      *
-     * <p>The document content is embedded using the configured {@link EmbeddingModel}
-     * (DashScope text-embedding) and stored for future retrieval.
+     * <p>The document content is embedded and stored by the configured {@link VectorStore}
+     * (backed by DashScope text-embedding in production) for future similarity search
+     * during RAG retrieval.
      *
      * @param knowledgeDocument the document to index
      * @return the generated document ID
