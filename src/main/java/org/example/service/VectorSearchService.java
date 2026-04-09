@@ -8,6 +8,8 @@ import io.milvus.response.SearchResultsWrapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.constant.MilvusConstants;
+import org.example.service.retrieval.RetrievedChunk;
+import org.example.util.DocumentIndexUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Map;
 
 /**
  * 向量搜索服务
@@ -42,6 +43,26 @@ public class VectorSearchService {
      * @return 搜索结果列表
      */
     public List<SearchResult> searchSimilarDocuments(String query, int topK) {
+        List<RetrievedChunk> retrievedChunks = searchSimilarChunks(query, topK);
+        List<SearchResult> results = new ArrayList<>();
+        for (RetrievedChunk chunk : retrievedChunks) {
+            SearchResult result = new SearchResult();
+            result.setId(chunk.getChunkId());
+            result.setContent(chunk.getContent());
+            result.setScore(chunk.getDenseScore());
+            result.setMetadata(chunk.getMetadata());
+            result.setTitle(chunk.getTitle());
+            result.setSource(chunk.getSource());
+            result.setChunkIndex(chunk.getChunkIndex());
+            results.add(result);
+        }
+        return results;
+    }
+
+    /**
+     * 搜索相似文档，返回统一候选结构，供混合检索/RRF/rerank 复用。
+     */
+    public List<RetrievedChunk> searchSimilarChunks(String query, int topK) {
         try {
             logger.info("开始搜索相似文档, 查询: {}, topK: {}", query, topK);
 
@@ -69,20 +90,34 @@ public class VectorSearchService {
 
             // 4. 解析搜索结果
             SearchResultsWrapper wrapper = new SearchResultsWrapper(searchResponse.getData().getResults());
-            List<SearchResult> results = new ArrayList<>();
+            List<RetrievedChunk> results = new ArrayList<>();
 
             for (int i = 0; i < wrapper.getRowRecords(0).size(); i++) {
-                SearchResult result = new SearchResult();
-                result.setId((String) wrapper.getIDScore(0).get(i).get("id"));
+                RetrievedChunk result = new RetrievedChunk();
+                String id = (String) wrapper.getIDScore(0).get(i).get("id");
+                result.setChunkId(id);
                 result.setContent((String) wrapper.getFieldData("content", 0).get(i));
-                result.setScore(wrapper.getIDScore(0).get(i).getScore());
-                
-                // 解析 metadata
+                result.setDenseScore(wrapper.getIDScore(0).get(i).getScore());
+
                 Object metadataObj = wrapper.getFieldData("metadata", 0).get(i);
                 if (metadataObj != null) {
-                    result.setMetadata(metadataObj.toString());
+                    String metadata = metadataObj.toString();
+                    result.setMetadata(metadata);
+                    Map<String, Object> parsedMetadata = SearchMetadataParser.parseMetadata(metadata);
+                    Object source = parsedMetadata.get("_source");
+                    if (source != null) {
+                        result.setSource(DocumentIndexUtils.normalizeSourcePath(source.toString()));
+                    }
+                    Object title = parsedMetadata.get("title");
+                    if (title != null) {
+                        result.setTitle(title.toString());
+                    }
+                    Object chunkIndex = parsedMetadata.get("chunkIndex");
+                    if (chunkIndex instanceof Number number) {
+                        result.setChunkIndex(number.intValue());
+                    }
                 }
-                
+
                 results.add(result);
             }
 
@@ -105,6 +140,9 @@ public class VectorSearchService {
         private String content;
         private float score;
         private String metadata;
+        private String title;
+        private String source;
+        private int chunkIndex;
 
     }
 }

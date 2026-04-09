@@ -71,6 +71,23 @@ services:
       minio:
         condition: service_healthy
 
+  reranker:
+    build:
+      context: ./rerank-service
+    image: opspilot-reranker:local
+    environment:
+      RERANK_MODEL_NAME: BAAI/bge-reranker-base
+      RERANK_DEVICE: cpu
+      RERANK_MAX_LENGTH: "512"
+      RERANK_BATCH_SIZE: "8"
+    ports:
+      - "8001:8001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
   app:
     build: .
     image: opspilot-ai:local
@@ -83,10 +100,15 @@ services:
       FILE_UPLOAD_PATH: /app/uploads
       # 未设置时 docker compose 会报错（见文件头说明）
       DASHSCOPE_API_KEY: ${DASHSCOPE_API_KEY:?set DASHSCOPE_API_KEY in your environment}
+      RAG_RERANK_ENABLED: "true"
+      RAG_RERANK_ENDPOINT: http://reranker:8001/rerank
+      RAG_RERANK_TIMEOUT_MS: "30000"
     volumes:
       - app-uploads:/app/uploads
     depends_on:
       standalone:
+        condition: service_healthy
+      reranker:
         condition: service_healthy
 
 volumes:

@@ -10,14 +10,19 @@ import com.alibaba.dashscope.exception.InputRequiredException;
 import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.alibaba.dashscope.utils.Constants;
 import io.reactivex.Flowable;
+import org.example.config.RagRetrievalProperties;
+import org.example.service.bm25.LuceneBm25Service;
+import org.example.service.retrieval.BgeRerankClient;
+import org.example.service.retrieval.RetrievedChunk;
+import org.example.service.retrieval.RrfFusionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -33,13 +38,22 @@ public class RagService {
     @Autowired
     private VectorSearchService vectorSearchService;
 
-    @Value("${dashscope.api.key}")
+    @Autowired
+    private LuceneBm25Service luceneBm25Service;
+
+    @Autowired
+    private RrfFusionService rrfFusionService;
+
+    @Autowired
+    private BgeRerankClient bgeRerankClient;
+
+    @Autowired
+    private RagRetrievalProperties ragRetrievalProperties;
+
+    @org.springframework.beans.factory.annotation.Value("${dashscope.api.key}")
     private String apiKey;
 
-    @Value("${rag.top-k:3}")
-    private int topK;
-
-    @Value("${rag.model:qwen3-30b-a3b-thinking-2507}")
+    @org.springframework.beans.factory.annotation.Value("${rag.model:qwen3-30b-a3b-thinking-2507}")
     private String model;
 
     private Generation generation;
@@ -53,7 +67,8 @@ public class RagService {
         // 创建 Generation 实例
         generation = new Generation();
         
-        logger.info("RAG 服务初始化完成，model: {}, topK: {}", model, topK);
+        logger.info("RAG 服务初始化完成，model: {}, recallTopN: {}, finalTopK: {}",
+                model, ragRetrievalProperties.getRecallTopN(), ragRetrievalProperties.getFinalTopK());
     }
 
     /**
@@ -77,9 +92,8 @@ public class RagService {
         try {
             logger.info("收到 RAG 流式查询: {}", question);
 
-            // 1. 从向量数据库检索相关文档
-            List<VectorSearchService.SearchResult> searchResults = 
-                vectorSearchService.searchSimilarDocuments(question, topK);
+            // 1. 混合召回：Milvus dense retrieval + Lucene BM25 retrieval
+            List<RetrievedChunk> searchResults = retrieveRelevantChunks(question);
 
             // 发送检索结果
             callback.onSearchResults(searchResults);
@@ -106,12 +120,15 @@ public class RagService {
     /**
      * 构建上下文
      */
-    private String buildContext(List<VectorSearchService.SearchResult> searchResults) {
+    private String buildContext(List<RetrievedChunk> searchResults) {
         StringBuilder context = new StringBuilder();
         
         for (int i = 0; i < searchResults.size(); i++) {
-            VectorSearchService.SearchResult result = searchResults.get(i);
+            RetrievedChunk result = searchResults.get(i);
             context.append("【参考资料 ").append(i + 1).append("】\n");
+            if (result.getTitle() != null && !result.getTitle().isBlank()) {
+                context.append("标题: ").append(result.getTitle()).append("\n");
+            }
             context.append(result.getContent()).append("\n\n");
         }
         
@@ -129,6 +146,38 @@ public class RagService {
             "请基于上述参考资料给出准确、详细的回答。如果参考资料中没有相关信息，请明确说明。",
             context, question
         );
+    }
+
+    private List<RetrievedChunk> retrieveRelevantChunks(String question) {
+        int recallTopN = ragRetrievalProperties.getRecallTopN();
+        int finalTopK = ragRetrievalProperties.getFinalTopK();
+
+        List<RetrievedChunk> denseHits = vectorSearchService.searchSimilarChunks(question, recallTopN);
+        List<LuceneBm25Service.Bm25Hit> bm25Hits = luceneBm25Service.search(question, recallTopN);
+
+        List<RetrievedChunk> fused = rrfFusionService.fuse(denseHits, bm25Hits);
+        List<RetrievedChunk> reranked = bgeRerankClient.rerank(question, fused, finalTopK);
+
+        reranked.sort(resolveFinalComparator());
+
+        logger.info("混合检索完成: dense={}, bm25={}, fused={}, final={}",
+                denseHits.size(), bm25Hits.size(), fused.size(), reranked.size());
+        return reranked;
+    }
+
+    /**
+     * 暴露给本地调试/离线评测使用的检索入口
+     * 不触发大模型生成，仅返回最终参与生成的检索结果。
+     */
+    public List<RetrievedChunk> retrieveForDebug(String question) {
+        return retrieveRelevantChunks(question);
+    }
+
+    private Comparator<RetrievedChunk> resolveFinalComparator() {
+        if (bgeRerankClient.isEnabled()) {
+            return Comparator.comparingDouble(RetrievedChunk::getRerankScore).reversed();
+        }
+        return Comparator.comparingDouble(RetrievedChunk::getFusionScore).reversed();
     }
 
     /**
@@ -224,7 +273,7 @@ public class RagService {
      * 流式回调接口
      */
     public interface StreamCallback {
-        void onSearchResults(List<VectorSearchService.SearchResult> results);
+        void onSearchResults(List<RetrievedChunk> results);
         void onReasoningChunk(String chunk);
         void onContentChunk(String chunk);
         void onComplete(String fullContent, String fullReasoning);

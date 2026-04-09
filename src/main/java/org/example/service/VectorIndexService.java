@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.constant.MilvusConstants;
 import org.example.dto.DocumentChunk;
+import org.example.service.bm25.LuceneBm25Service;
+import org.example.util.DocumentIndexUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class VectorIndexService {
 
     @Autowired
     private DocumentChunkService chunkService;
+
+    @Autowired
+    private LuceneBm25Service luceneBm25Service;
 
     @Value("${file.upload.path}")
     private String uploadPath;
@@ -142,6 +147,9 @@ public class VectorIndexService {
         List<DocumentChunk> chunks = chunkService.chunkDocument(content, path.toString());
         logger.info("文档分片完成: {} -> {} 个分片", filePath, chunks.size());
 
+        // 3.1 同步构建 BM25 倒排索引，为后续混合检索提供稀疏召回能力
+        luceneBm25Service.indexDocumentChunks(path.toString(), chunks);
+
         // 4. 为每个分片生成向量并插入 Milvus
         for (int i = 0; i < chunks.size(); i++) {
             DocumentChunk chunk = chunks.get(i);
@@ -175,7 +183,7 @@ public class VectorIndexService {
             // 使用统一的路径分隔符（正斜杠）用于Milvus存储，避免表达式解析错误
             // 将系统路径转换为统一格式
             Path path = Paths.get(filePath).normalize();
-            String normalizedPath = path.toString().replace(File.separator, "/");
+            String normalizedPath = DocumentIndexUtils.normalizeSourcePath(path.toString());
             
             // 构建删除表达式：metadata["_source"] == "xxx"
             String expr = String.format("metadata[\"_source\"] == \"%s\"", normalizedPath);
@@ -222,7 +230,7 @@ public class VectorIndexService {
         
         // 标准化路径：使用统一的路径分隔符（正斜杠）用于存储，确保跨平台一致性
         Path path = Paths.get(filePath).normalize();
-        String normalizedPath = path.toString().replace(File.separator, "/");
+        String normalizedPath = DocumentIndexUtils.normalizeSourcePath(path.toString());
         
         // 文件信息
         Path fileName = path.getFileName();
@@ -268,7 +276,7 @@ public class VectorIndexService {
 
             // 生成唯一 ID（使用 _source + 分片索引）
             String source = (String) metadata.get("_source");
-            String id = UUID.nameUUIDFromBytes((source + "_" + chunkIndex).getBytes()).toString();
+            String id = DocumentIndexUtils.buildChunkId(source, chunkIndex);
 
             // 构建字段数据
             List<InsertParam.Field> fields = new ArrayList<>();
