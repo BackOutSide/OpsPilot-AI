@@ -1,0 +1,1207 @@
+[ {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 0,
+  "chunkKey" : "cpu_high_usage.md#0",
+  "chunkId" : "721d5daa-0e1a-3599-97ba-94ce70b2d3a2",
+  "title" : "CPU使用率过高告警处理方案",
+  "contentLength" : 16,
+  "preview" : "# CPU使用率过高告警处理方案"
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 1,
+  "chunkKey" : "cpu_high_usage.md#1",
+  "chunkId" : "573e96f6-e0ad-34f2-a3af-bbcae255e182",
+  "title" : "告警名称",
+  "contentLength" : 77,
+  "preview" : "## 告警名称 - **告警名**: `HighCPUUsage` - **告警级别**: 严重 - **触发条件**: CPU使用率持续5分钟超过80%"
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 2,
+  "chunkKey" : "cpu_high_usage.md#2",
+  "chunkId" : "c5f1d53b-421e-3416-8619-37dbe16d3e5c",
+  "title" : "问题描述",
+  "contentLength" : 74,
+  "preview" : "## 问题描述 当服务器或容器的CPU使用率持续超过80%时，可能导致： - 应用响应变慢 - 请求超时增加 - 系统负载过高 - 可能触发雪崩效应"
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 3,
+  "chunkKey" : "cpu_high_usage.md#3",
+  "chunkId" : "65172303-2204-33d2-ac90-5c9801a1d5ed",
+  "title" : "排查步骤",
+  "contentLength" : 7,
+  "preview" : "## 排查步骤"
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 4,
+  "chunkKey" : "cpu_high_usage.md#4",
+  "chunkId" : "cd7e51fb-640d-3641-9726-a236d1f5300d",
+  "title" : "步骤1: 获取当前时间",
+  "contentLength" : 71,
+  "preview" : "### 步骤1: 获取当前时间 **工具**: `get_current_time` **目的**: 确定告警发生的时间范围，用于后续日志查询"
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 5,
+  "chunkKey" : "cpu_high_usage.md#5",
+  "chunkId" : "fb64eac7-e88e-340a-ab9f-7f17cd06ef28",
+  "title" : "步骤2: 查询系统日志",
+  "contentLength" : 312,
+  "preview" : "### 步骤2: 查询系统日志 **工具**: `query_logs` **参数要求**: - **地域**: `ap-guangzhou` (广州) - **日志主题**: `system-metrics` - **时间范围**: 最近..."
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 6,
+  "chunkKey" : "cpu_high_usage.md#6",
+  "chunkId" : "35ae86b3-6a05-3942-857d-d7e7a7866a81",
+  "title" : "步骤3: 分析CPU消耗进程",
+  "contentLength" : 75,
+  "preview" : "### 步骤3: 分析CPU消耗进程 查看日志中的进程信息，重点关注： - 进程名称和PID - CPU占用百分比 - 进程启动时间 - 进程所属服务"
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 7,
+  "chunkKey" : "cpu_high_usage.md#7",
+  "chunkId" : "2f1c7ff0-88ce-3f0f-93d7-9c1847b7f3e3",
+  "title" : "步骤4: 查询应用日志",
+  "contentLength" : 162,
+  "preview" : "### 步骤4: 查询应用日志 **工具**: `query_logs` **参数要求**: - **地域**: `ap-guangzhou` - **日志主题**: `application-logs` - **时间范围**: 与告警时间..."
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 8,
+  "chunkKey" : "cpu_high_usage.md#8",
+  "chunkId" : "a8561232-697d-3ff3-aebe-860563d7d244",
+  "title" : "常见原因分析",
+  "contentLength" : 9,
+  "preview" : "## 常见原因分析"
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 9,
+  "chunkKey" : "cpu_high_usage.md#9",
+  "chunkId" : "b8adda0c-9c69-3630-9091-48c7819489a4",
+  "title" : "原因1: 死循环或无限递归",
+  "contentLength" : 149,
+  "preview" : "### 原因1: 死循环或无限递归 **特征**: - 单个进程CPU占用接近100% - 应用日志中有大量重复的错误堆栈 - 内存使用也可能同步增长  **处理方案**: 1. 立即重启受影响的服务实例 2. 查看应用日志定位代码问题 3..."
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 10,
+  "chunkKey" : "cpu_high_usage.md#10",
+  "chunkId" : "64016fc5-b979-3df5-ac8b-29fd1cab18c8",
+  "title" : "原因2: 流量突增",
+  "contentLength" : 138,
+  "preview" : "### 原因2: 流量突增 **特征**: - 多个进程CPU使用率均匀升高 - 请求量明显增加 - 响应时间变长但无明显错误  **处理方案**: 1. 检查是否有营销活动或突发流量 2. 启动自动扩容机制 3. 如果是恶意流量，启用限流..."
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 11,
+  "chunkKey" : "cpu_high_usage.md#11",
+  "chunkId" : "3aab7243-e29f-3c21-9638-954f254eda97",
+  "title" : "原因3: 定时任务重叠执行",
+  "contentLength" : 129,
+  "preview" : "### 原因3: 定时任务重叠执行 **特征**: - CPU使用率周期性升高 - 特定时间点出现 - 日志中有定时任务执行记录  **处理方案**: 1. 检查定时任务配置 2. 调整任务执行时间，避免重叠 3. 优化任务执行逻辑 4. ..."
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 12,
+  "chunkKey" : "cpu_high_usage.md#12",
+  "chunkId" : "6a23f70a-c4ea-39b0-9c3a-b3c989365463",
+  "title" : "原因4: 数据库查询慢",
+  "contentLength" : 129,
+  "preview" : "### 原因4: 数据库查询慢 **特征**: - 应用CPU高，但实际业务逻辑简单 - 日志中有慢查询记录 - 数据库连接池占用高  **处理方案**: 1. 查询慢SQL日志 2. 优化SQL语句或添加索引 3. 检查是否有全表扫描 4..."
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 13,
+  "chunkKey" : "cpu_high_usage.md#13",
+  "chunkId" : "38496b8e-d502-3c8b-84c0-8a156feb017a",
+  "title" : "紧急处理措施",
+  "contentLength" : 9,
+  "preview" : "## 紧急处理措施"
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 14,
+  "chunkKey" : "cpu_high_usage.md#14",
+  "chunkId" : "29df9c08-a796-39c3-b321-4227ad6124f9",
+  "title" : "立即操作（5分钟内）",
+  "contentLength" : 96,
+  "preview" : "### 立即操作（5分钟内） 1. **扩容**: 如果是流量问题，立即增加实例数量 2. **限流**: 如果怀疑恶意流量，启用限流规则 3. **重启**: 如果是单个实例问题，重启该实例"
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 15,
+  "chunkKey" : "cpu_high_usage.md#15",
+  "chunkId" : "d299ff7a-b31d-3561-bcd9-7bde59c20176",
+  "title" : "短期措施（30分钟内）",
+  "contentLength" : 77,
+  "preview" : "### 短期措施（30分钟内） 1. 分析日志找出根本原因 2. 如果是代码问题，准备回滚 3. 如果是配置问题，调整配置 4. 持续监控CPU使用率变化"
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 16,
+  "chunkKey" : "cpu_high_usage.md#16",
+  "chunkId" : "63f74637-fedb-344c-9568-6f6ebe847f04",
+  "title" : "长期优化",
+  "contentLength" : 55,
+  "preview" : "### 长期优化 1. 代码性能优化 2. 增加监控告警阈值 3. 完善自动扩缩容策略 4. 定期进行压力测试"
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 17,
+  "chunkKey" : "cpu_high_usage.md#17",
+  "chunkId" : "13b8763b-3672-37df-abc0-50c96c569a8e",
+  "title" : "验证步骤",
+  "contentLength" : 80,
+  "preview" : "## 验证步骤 1. 确认CPU使用率降到正常水平（<60%） 2. 检查应用响应时间恢复正常 3. 确认无新的错误日志产生 4. 观察30分钟确保问题不再复现"
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 18,
+  "chunkKey" : "cpu_high_usage.md#18",
+  "chunkId" : "253acbed-c254-395f-8bd3-f31dc887a2c9",
+  "title" : "相关告警",
+  "contentLength" : 89,
+  "preview" : "## 相关告警 - `HighMemoryUsage`: 内存使用率过高 - `HighLoadAverage`: 系统负载过高 - `SlowResponse`: 响应时间过长"
+}, {
+  "source" : "cpu_high_usage.md",
+  "normalizedSource" : "aiops-docs/cpu_high_usage.md",
+  "chunkIndex" : 19,
+  "chunkKey" : "cpu_high_usage.md#19",
+  "chunkId" : "c2446ac4-7e9b-3205-a916-aef59fa8d892",
+  "title" : "联系方式",
+  "contentLength" : 98,
+  "preview" : "## 联系方式 - **运维团队**: ops-team@company.com - **开发团队**: dev-team@company.com - **紧急电话**: 400-xxx-xxxx"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 0,
+  "chunkKey" : "disk_high_usage.md#0",
+  "chunkId" : "7d6c74ca-fb7b-3bf4-bd2e-8494cdbfbfda",
+  "title" : "磁盘使用率过高告警处理方案",
+  "contentLength" : 15,
+  "preview" : "# 磁盘使用率过高告警处理方案"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 1,
+  "chunkKey" : "disk_high_usage.md#1",
+  "chunkId" : "1afdfc90-2e38-3785-9431-0f969759eae4",
+  "title" : "告警名称",
+  "contentLength" : 92,
+  "preview" : "## 告警名称 - **告警名**: `HighDiskUsage` - **告警级别**: 警告（>80%）/ 严重（>90%） - **触发条件**: 磁盘使用率持续5分钟超过阈值"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 2,
+  "chunkKey" : "disk_high_usage.md#2",
+  "chunkId" : "e107bebe-2bf8-39b2-aac4-733b4af550f7",
+  "title" : "问题描述",
+  "contentLength" : 62,
+  "preview" : "## 问题描述 磁盘使用率过高会导致： - 无法写入新数据 - 日志无法记录 - 应用崩溃 - 数据库损坏 - 系统性能下降"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 3,
+  "chunkKey" : "disk_high_usage.md#3",
+  "chunkId" : "c689ef5a-1beb-3cfc-afb9-e7e2448b1a60",
+  "title" : "排查步骤",
+  "contentLength" : 7,
+  "preview" : "## 排查步骤"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 4,
+  "chunkKey" : "disk_high_usage.md#4",
+  "chunkId" : "7bed079a-1f59-3d30-9ec1-314d912d3522",
+  "title" : "步骤1: 获取当前时间",
+  "contentLength" : 64,
+  "preview" : "### 步骤1: 获取当前时间 **工具**: `get_current_time` **目的**: 记录告警时间，用于日志查询"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 5,
+  "chunkKey" : "disk_high_usage.md#5",
+  "chunkId" : "d4dc525a-241c-3541-885a-5373948d9e26",
+  "title" : "步骤2: 查询系统磁盘使用情况",
+  "contentLength" : 295,
+  "preview" : "### 步骤2: 查询系统磁盘使用情况 **工具**: `query_logs` **参数要求**: - **地域**: `ap-guangzhou` - **日志主题**: `system-metrics` - **时间范围**: 最近3..."
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 6,
+  "chunkKey" : "disk_high_usage.md#6",
+  "chunkId" : "c280c027-4244-35fe-8440-28d4c6b7f707",
+  "title" : "步骤3: 查询应用日志",
+  "contentLength" : 153,
+  "preview" : "### 步骤3: 查询应用日志 **工具**: `query_logs` **参数要求**: - **地域**: `ap-guangzhou` - **日志主题**: `application-logs` - **查询条件**: `No s..."
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 7,
+  "chunkKey" : "disk_high_usage.md#7",
+  "chunkId" : "1bf3c75b-fce8-3da9-a6a3-f29a44f0572b",
+  "title" : "步骤4: 分析磁盘占用",
+  "contentLength" : 65,
+  "preview" : "### 步骤4: 分析磁盘占用 从日志中分析： - 哪个目录占用空间最大 - 日志文件大小 - 临时文件数量 - 数据文件增长趋势"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 8,
+  "chunkKey" : "disk_high_usage.md#8",
+  "chunkId" : "0bbb22da-30f0-3f4a-ae75-a641f7132efb",
+  "title" : "常见原因分析",
+  "contentLength" : 9,
+  "preview" : "## 常见原因分析"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 9,
+  "chunkKey" : "disk_high_usage.md#9",
+  "chunkId" : "ad920bad-7236-3a6c-aeb3-91e2be4344c0",
+  "title" : "原因1: 日志文件过大",
+  "contentLength" : 476,
+  "preview" : "### 原因1: 日志文件过大 **特征**: - /var/log 目录占用大量空间 - 应用日志文件持续增长 - 没有日志轮转或轮转失败 - 日志级别设置为DEBUG  **处理方案**: 1. **立即清理**:    ```bash..."
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 10,
+  "chunkKey" : "disk_high_usage.md#10",
+  "chunkId" : "27ee2f5d-f05d-3b45-a9c6-9172933c246b",
+  "title" : "原因2: 临时文件堆积",
+  "contentLength" : 396,
+  "preview" : "### 原因2: 临时文件堆积 **特征**: - /tmp 目录占用大量空间 - 大量临时文件未清理 - 文件上传临时目录满 - 缓存文件过多  **处理方案**: 1. **清理临时文件**:    ```bash    # 查找大临时..."
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 11,
+  "chunkKey" : "disk_high_usage.md#11",
+  "chunkId" : "811b385d-13e7-3830-acaa-06747608d154",
+  "title" : "原因3: 数据文件增长过快",
+  "contentLength" : 275,
+  "preview" : "### 原因3: 数据文件增长过快 **特征**: - 数据库文件持续增长 - 业务数据量激增 - 没有数据归档策略 - 历史数据未清理  **处理方案**: 1. **数据清理**:    - 删除过期数据    - 归档历史数据    ..."
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 12,
+  "chunkKey" : "disk_high_usage.md#12",
+  "chunkId" : "7c935472-21e1-38bd-9d5e-e7d449dd52dd",
+  "title" : "原因4: 备份文件占用空间",
+  "contentLength" : 362,
+  "preview" : "### 原因4: 备份文件占用空间 **特征**: - 备份目录占用大量空间 - 多个历史备份文件 - 备份文件未压缩 - 备份未转移到其他存储  **处理方案**: 1. **清理旧备份**:    ```bash    # 查找备份文件..."
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 13,
+  "chunkKey" : "disk_high_usage.md#13",
+  "chunkId" : "adccd6fb-cb1a-35b0-adbc-d548659e3386",
+  "title" : "原因5: 应用缓存文件过多",
+  "contentLength" : 313,
+  "preview" : "### 原因5: 应用缓存文件过多 **特征**: - 缓存目录占用大量空间 - 缓存文件未过期清理 - 缓存策略不合理 - 缓存命中率低  **处理方案**: 1. **清理缓存**:    ```bash    # 清理应用缓存    ..."
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 14,
+  "chunkKey" : "disk_high_usage.md#14",
+  "chunkId" : "e154181b-d338-396e-a1ee-c4f8e71bb118",
+  "title" : "原因6: Docker镜像和容器占用",
+  "contentLength" : 409,
+  "preview" : "### 原因6: Docker镜像和容器占用 **特征**: - Docker占用大量磁盘空间 - 大量未使用的镜像 - 停止的容器未清理 - 容器日志过大  **处理方案**: 1. **清理Docker资源**:    ```bash ..."
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 15,
+  "chunkKey" : "disk_high_usage.md#15",
+  "chunkId" : "a2eca8ba-59b2-365c-b6af-6d1c5415f18a",
+  "title" : "紧急处理措施",
+  "contentLength" : 9,
+  "preview" : "## 紧急处理措施"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 16,
+  "chunkKey" : "disk_high_usage.md#16",
+  "chunkId" : "c38f37fd-190d-32f5-93ae-c8ab614902e0",
+  "title" : "立即操作（5分钟内）",
+  "contentLength" : 254,
+  "preview" : "### 立即操作（5分钟内） 1. **快速清理**:    - 删除大日志文件    - 清理临时文件    - 删除不必要的文件  2. **释放空间**:    ```bash    # 查找最大的10个文件    du -ah / ..."
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 17,
+  "chunkKey" : "disk_high_usage.md#17",
+  "chunkId" : "1e0d41a5-2911-33c0-8519-9b5b41fcdc81",
+  "title" : "短期措施（30分钟内）",
+  "contentLength" : 179,
+  "preview" : "### 短期措施（30分钟内） 1. **系统清理**:    - 清理包管理器缓存    - 清理系统日志    - 清理core dump文件  2. **应用优化**:    - 配置日志轮转    - 清理应用缓存    - 删除过..."
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 18,
+  "chunkKey" : "disk_high_usage.md#18",
+  "chunkId" : "8e06a46c-a0b8-3315-8b14-58e832825c8d",
+  "title" : "长期优化",
+  "contentLength" : 174,
+  "preview" : "### 长期优化 1. **自动化清理**:    - 设置定时清理任务    - 实现自动日志轮转    - 自动归档历史数据  2. **容量规划**:    - 根据业务增长规划容量    - 预留足够的磁盘空间    - 实现弹性扩..."
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 19,
+  "chunkKey" : "disk_high_usage.md#19",
+  "chunkId" : "06dc3374-7fac-32b2-85f7-9c5e852258f5",
+  "title" : "常用命令",
+  "contentLength" : 7,
+  "preview" : "## 常用命令"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 20,
+  "chunkKey" : "disk_high_usage.md#20",
+  "chunkId" : "1f54036e-0054-3145-868c-34b1f7ffc30e",
+  "title" : "查看磁盘使用情况",
+  "contentLength" : 20,
+  "preview" : "### 查看磁盘使用情况 ```bash"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 21,
+  "chunkKey" : "disk_high_usage.md#21",
+  "chunkId" : "5d725c7c-c8b6-39fa-9ac8-eb9517f18d0e",
+  "title" : "查看磁盘使用率",
+  "contentLength" : 15,
+  "preview" : "# 查看磁盘使用率 df -h"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 22,
+  "chunkKey" : "disk_high_usage.md#22",
+  "chunkId" : "d3bd82e7-8528-366f-a732-c026486308a3",
+  "title" : "查看目录大小",
+  "contentLength" : 24,
+  "preview" : "# 查看目录大小 du -sh /var/log"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 23,
+  "chunkKey" : "disk_high_usage.md#23",
+  "chunkId" : "cbbf23cc-8ede-3e3e-bf30-59e04e0242c5",
+  "title" : "查找大文件",
+  "contentLength" : 32,
+  "preview" : "# 查找大文件 find / -type f -size +1G"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 24,
+  "chunkKey" : "disk_high_usage.md#24",
+  "chunkId" : "70c533c2-5847-3379-8b70-239bb22e7e33",
+  "title" : "查看inode使用情况",
+  "contentLength" : 23,
+  "preview" : "# 查看inode使用情况 df -i ```"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 25,
+  "chunkKey" : "disk_high_usage.md#25",
+  "chunkId" : "a55bf190-0d0e-35a9-a97b-4fc0e84879d6",
+  "title" : "清理命令",
+  "contentLength" : 16,
+  "preview" : "### 清理命令 ```bash"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 26,
+  "chunkKey" : "disk_high_usage.md#26",
+  "chunkId" : "a4bd9bf4-a0a6-3e3a-a803-d576e020c9a3",
+  "title" : "清空文件内容（保留文件）",
+  "contentLength" : 35,
+  "preview" : "# 清空文件内容（保留文件） > /var/log/large.log"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 27,
+  "chunkKey" : "disk_high_usage.md#27",
+  "chunkId" : "4b9e8dd4-5220-3c6b-9bfa-cd3e5c1ffa75",
+  "title" : "删除N天前的文件",
+  "contentLength" : 39,
+  "preview" : "# 删除N天前的文件 find /path -mtime +N -delete"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 28,
+  "chunkKey" : "disk_high_usage.md#28",
+  "chunkId" : "811a0f1b-d693-37ab-874f-44a25393ec18",
+  "title" : "压缩日志文件",
+  "contentLength" : 28,
+  "preview" : "# 压缩日志文件 gzip /var/log/*.log"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 29,
+  "chunkKey" : "disk_high_usage.md#29",
+  "chunkId" : "d3cbe440-24e0-3a46-b761-085530f943c1",
+  "title" : "清理包管理器缓存",
+  "contentLength" : 62,
+  "preview" : "# 清理包管理器缓存 yum clean all  # CentOS apt-get clean  # Ubuntu ```"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 30,
+  "chunkKey" : "disk_high_usage.md#30",
+  "chunkId" : "75f174c6-e689-3a9d-a3d2-a6a27e5d9867",
+  "title" : "验证步骤",
+  "contentLength" : 83,
+  "preview" : "## 验证步骤 1. 确认磁盘使用率降到安全水平（<70%） 2. 检查应用运行正常 3. 验证日志可以正常写入 4. 确认数据库运行正常 5. 持续监控磁盘使用情况"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 31,
+  "chunkKey" : "disk_high_usage.md#31",
+  "chunkId" : "2dbb964c-c704-3615-a220-d9f0a05b147a",
+  "title" : "预防措施",
+  "contentLength" : 138,
+  "preview" : "## 预防措施 1. **监控告警**: 设置60%预警，80%严重告警 2. **定期清理**: 每周自动清理临时文件和旧日志 3. **容量规划**: 根据增长趋势提前扩容 4. **日志管理**: 实施统一的日志管理策略 5. **数..."
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 32,
+  "chunkKey" : "disk_high_usage.md#32",
+  "chunkId" : "854959bb-c83d-3220-8487-7384e1784c8a",
+  "title" : "相关告警",
+  "contentLength" : 104,
+  "preview" : "## 相关告警 - `InodeFull`: inode耗尽 - `DiskIOHigh`: 磁盘IO过高 - `DiskReadOnly`: 磁盘只读 - `FileSystemError`: 文件系统错误"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 33,
+  "chunkKey" : "disk_high_usage.md#33",
+  "chunkId" : "46a57283-0bef-31db-b44c-efe0460b710f",
+  "title" : "联系方式",
+  "contentLength" : 102,
+  "preview" : "## 联系方式 - **运维团队**: ops-team@company.com - **存储团队**: storage-team@company.com - **紧急电话**: 400-xxx-xxxx"
+}, {
+  "source" : "disk_high_usage.md",
+  "normalizedSource" : "aiops-docs/disk_high_usage.md",
+  "chunkIndex" : 34,
+  "chunkKey" : "disk_high_usage.md#34",
+  "chunkId" : "4f013938-7b65-31b0-93f0-4c2199723656",
+  "title" : "参考文档",
+  "contentLength" : 142,
+  "preview" : "## 参考文档 - [磁盘管理最佳实践](internal-docs/disk-management.md) - [日志管理规范](internal-docs/log-management.md) - [数据归档策略](internal-d..."
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 0,
+  "chunkKey" : "memory_high_usage.md#0",
+  "chunkId" : "d89161f8-4346-37f6-a5f1-accc8c865e3d",
+  "title" : "内存使用率过高告警处理方案",
+  "contentLength" : 15,
+  "preview" : "# 内存使用率过高告警处理方案"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 1,
+  "chunkKey" : "memory_high_usage.md#1",
+  "chunkId" : "6b2e869b-0597-32b3-9e6a-934daa4f8dc6",
+  "title" : "告警名称",
+  "contentLength" : 79,
+  "preview" : "## 告警名称 - **告警名**: `HighMemoryUsage` - **告警级别**: 严重 - **触发条件**: 内存使用率持续5分钟超过85%"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 2,
+  "chunkKey" : "memory_high_usage.md#2",
+  "chunkId" : "5188b735-505a-386d-89c3-f0ed84a1c3cd",
+  "title" : "问题描述",
+  "contentLength" : 101,
+  "preview" : "## 问题描述 当服务器或容器的内存使用率持续超过85%时，可能导致： - 应用频繁GC（垃圾回收） - OOM（Out Of Memory）错误 - 应用崩溃或重启 - 系统swap频繁，性能急剧下降"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 3,
+  "chunkKey" : "memory_high_usage.md#3",
+  "chunkId" : "d4ea388a-3287-35a2-b9ee-030af3fe1100",
+  "title" : "排查步骤",
+  "contentLength" : 7,
+  "preview" : "## 排查步骤"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 4,
+  "chunkKey" : "memory_high_usage.md#4",
+  "chunkId" : "5614fe9d-5e0f-39ed-9b91-c94160cff7ef",
+  "title" : "步骤1: 获取当前时间",
+  "contentLength" : 62,
+  "preview" : "### 步骤1: 获取当前时间 **工具**: `get_current_time` **目的**: 确定告警发生的时间范围"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 5,
+  "chunkKey" : "memory_high_usage.md#5",
+  "chunkId" : "2fa62732-1121-30f7-96f8-ff77c3551db1",
+  "title" : "步骤2: 查询系统监控日志",
+  "contentLength" : 290,
+  "preview" : "### 步骤2: 查询系统监控日志 **工具**: `query_logs` **参数要求**: - **地域**: `ap-guangzhou` - **日志主题**: `system-metrics` - **时间范围**: 最近30分..."
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 6,
+  "chunkKey" : "memory_high_usage.md#6",
+  "chunkId" : "05869b11-a5ee-3e3a-bca7-8cf2bc5da38d",
+  "title" : "步骤3: 查询应用日志",
+  "contentLength" : 148,
+  "preview" : "### 步骤3: 查询应用日志 **工具**: `query_logs` **参数要求**: - **地域**: `ap-guangzhou` - **日志主题**: `application-logs` - **查询条件**: `OutO..."
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 7,
+  "chunkKey" : "memory_high_usage.md#7",
+  "chunkId" : "ed83b112-7639-3e00-9873-ccad9babb756",
+  "title" : "步骤4: 分析内存使用情况",
+  "contentLength" : 70,
+  "preview" : "### 步骤4: 分析内存使用情况 从日志中提取： - JVM堆内存使用情况 - GC频率和耗时 - 是否有内存泄漏迹象 - 大对象分配记录"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 8,
+  "chunkKey" : "memory_high_usage.md#8",
+  "chunkId" : "c37898c1-27ef-3bfb-8db9-9b9ce1b8ee2b",
+  "title" : "常见原因分析",
+  "contentLength" : 9,
+  "preview" : "## 常见原因分析"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 9,
+  "chunkKey" : "memory_high_usage.md#9",
+  "chunkId" : "13a2de3f-95a7-33df-b0f5-e8e1e0c498e8",
+  "title" : "原因1: 内存泄漏",
+  "contentLength" : 230,
+  "preview" : "### 原因1: 内存泄漏 **特征**: - 内存使用率持续缓慢上升 - Full GC后内存无法释放 - 应用运行时间越长，内存占用越高 - 日志中有大量GC记录  **处理方案**: 1. **紧急措施**: 重启应用释放内存 2. ..."
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 10,
+  "chunkKey" : "memory_high_usage.md#10",
+  "chunkId" : "1e26fadc-933d-3a79-9598-02054dae8a29",
+  "title" : "原因2: 流量突增导致对象激增",
+  "contentLength" : 189,
+  "preview" : "### 原因2: 流量突增导致对象激增 **特征**: - 内存使用率突然升高 - 与流量增长同步 - GC能够回收大部分内存 - 应用日志显示请求量激增  **处理方案**: 1. **立即扩容**: 增加应用实例数量 2. **启用限流..."
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 11,
+  "chunkKey" : "memory_high_usage.md#11",
+  "chunkId" : "779f7e21-3adc-36fe-b19f-bb7f944da888",
+  "title" : "原因3: 缓存配置不当",
+  "contentLength" : 187,
+  "preview" : "### 原因3: 缓存配置不当 **特征**: - 缓存占用内存过大 - 缓存命中率低 - 缓存数据长时间不过期 - 日志中有缓存相关警告  **处理方案**: 1. **调整缓存大小**: 减少缓存容量上限 2. **优化过期策略**: ..."
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 12,
+  "chunkKey" : "memory_high_usage.md#12",
+  "chunkId" : "c239129c-f09d-31c4-839b-6d90759ef23d",
+  "title" : "原因4: 大文件或大数据处理",
+  "contentLength" : 206,
+  "preview" : "### 原因4: 大文件或大数据处理 **特征**: - 特定时间点内存突增 - 日志中有文件上传或数据导入记录 - 处理完成后内存可以释放 - 与定时任务或用户操作相关  **处理方案**: 1. **优化处理逻辑**: 改为流式处理，避..."
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 13,
+  "chunkKey" : "memory_high_usage.md#13",
+  "chunkId" : "a2dc5e6f-0745-3ab6-8ea7-564618cdcc8c",
+  "title" : "原因5: JVM参数配置不合理",
+  "contentLength" : 220,
+  "preview" : "### 原因5: JVM参数配置不合理 **特征**: - 堆内存配置过小 - 新生代和老年代比例不合理 - GC算法选择不当 - 元空间（Metaspace）溢出  **处理方案**: 1. **调整堆内存**: 增加-Xmx和-Xms参..."
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 14,
+  "chunkKey" : "memory_high_usage.md#14",
+  "chunkId" : "67e6e567-e5d7-37fc-bd72-d2cbd7d2a519",
+  "title" : "紧急处理措施",
+  "contentLength" : 9,
+  "preview" : "## 紧急处理措施"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 15,
+  "chunkKey" : "memory_high_usage.md#15",
+  "chunkId" : "9eaff34f-2be0-31dc-8b3e-14905b092a90",
+  "title" : "立即操作（5分钟内）",
+  "contentLength" : 93,
+  "preview" : "### 立即操作（5分钟内） 1. **重启高内存实例**: 快速释放内存，恢复服务 2. **扩容**: 增加实例数量，分散内存压力 3. **限流**: 如果是流量问题，启用限流保护"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 16,
+  "chunkKey" : "memory_high_usage.md#16",
+  "chunkId" : "24554db3-af5f-36ec-949d-192d1a496172",
+  "title" : "短期措施（30分钟内）",
+  "contentLength" : 125,
+  "preview" : "### 短期措施（30分钟内） 1. **分析日志**: 确定内存增长的根本原因 2. **dump内存快照**: 保留现场用于后续分析 3. **调整JVM参数**: 如果是配置问题，临时调整参数 4. **清理缓存**: 手动清理不必要..."
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 17,
+  "chunkKey" : "memory_high_usage.md#17",
+  "chunkId" : "d8cbb435-ab4e-3745-994e-5808058a43a3",
+  "title" : "长期优化",
+  "contentLength" : 112,
+  "preview" : "### 长期优化 1. **代码优化**: 修复内存泄漏，优化对象创建 2. **监控完善**: 增加内存监控指标和告警 3. **压力测试**: 定期进行内存压力测试 4. **容量规划**: 根据业务增长合理规划内存容量"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 18,
+  "chunkKey" : "memory_high_usage.md#18",
+  "chunkId" : "1a2fa52b-53fd-3ac2-b7b4-26ef04b5cee6",
+  "title" : "验证步骤",
+  "contentLength" : 79,
+  "preview" : "## 验证步骤 1. 确认内存使用率降到正常水平（<70%） 2. 观察GC频率和耗时是否正常 3. 检查应用日志无OOM错误 4. 持续监控30分钟确保稳定"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 19,
+  "chunkKey" : "memory_high_usage.md#19",
+  "chunkId" : "c0839f45-cbff-3ac9-a823-2b21ed82a1b2",
+  "title" : "预防措施",
+  "contentLength" : 119,
+  "preview" : "## 预防措施 1. **设置合理的内存告警阈值**: 70%预警，85%严重 2. **定期内存分析**: 每周分析内存使用趋势 3. **代码审查**: 关注大对象创建和集合使用 4. **压力测试**: 上线前进行充分的内存压力测试"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 20,
+  "chunkKey" : "memory_high_usage.md#20",
+  "chunkId" : "ebe21b67-f522-3fa6-995e-c5f8dbda0758",
+  "title" : "相关工具命令",
+  "contentLength" : 9,
+  "preview" : "## 相关工具命令"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 21,
+  "chunkKey" : "memory_high_usage.md#21",
+  "chunkId" : "6b6ce01d-f611-3066-8dd0-76bbee03544c",
+  "title" : "查看JVM内存使用",
+  "contentLength" : 42,
+  "preview" : "### 查看JVM内存使用 ```bash jmap -heap <pid> ```"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 22,
+  "chunkKey" : "memory_high_usage.md#22",
+  "chunkId" : "18ed455a-dd92-364e-86af-f5345e91d804",
+  "title" : "生成堆转储文件",
+  "contentLength" : 65,
+  "preview" : "### 生成堆转储文件 ```bash jmap -dump:format=b,file=heap.hprof <pid> ```"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 23,
+  "chunkKey" : "memory_high_usage.md#23",
+  "chunkId" : "6fe77134-034d-358c-916d-d783791e7b85",
+  "title" : "查看GC日志",
+  "contentLength" : 43,
+  "preview" : "### 查看GC日志 ```bash jstat -gc <pid> 1000 ```"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 24,
+  "chunkKey" : "memory_high_usage.md#24",
+  "chunkId" : "99fce6de-529f-3d25-80fa-7d205e320668",
+  "title" : "相关告警",
+  "contentLength" : 113,
+  "preview" : "## 相关告警 - `HighCPUUsage`: CPU使用率过高（可能伴随频繁GC） - `FrequentGC`: GC频率过高 - `OOMError`: 内存溢出错误 - `SlowResponse`: 响应时间过长"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 25,
+  "chunkKey" : "memory_high_usage.md#25",
+  "chunkId" : "cf214358-6c51-33f4-b5b1-378591af3e1c",
+  "title" : "联系方式",
+  "contentLength" : 98,
+  "preview" : "## 联系方式 - **运维团队**: ops-team@company.com - **开发团队**: dev-team@company.com - **紧急电话**: 400-xxx-xxxx"
+}, {
+  "source" : "memory_high_usage.md",
+  "normalizedSource" : "aiops-docs/memory_high_usage.md",
+  "chunkIndex" : 26,
+  "chunkKey" : "memory_high_usage.md#26",
+  "chunkId" : "9a6e6883-dd91-3736-bedc-72ceaffb1c63",
+  "title" : "参考文档",
+  "contentLength" : 126,
+  "preview" : "## 参考文档 - [JVM内存管理最佳实践](internal-docs/jvm-memory-best-practices.md) - [内存泄漏排查指南](internal-docs/memory-leak-troubleshooti..."
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 0,
+  "chunkKey" : "service_unavailable.md#0",
+  "chunkId" : "4e0a44d0-c378-3210-9ff5-240cb41b10b4",
+  "title" : "服务不可用告警处理方案",
+  "contentLength" : 13,
+  "preview" : "# 服务不可用告警处理方案"
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 1,
+  "chunkKey" : "service_unavailable.md#1",
+  "chunkId" : "a0f3c363-ff1f-3438-875f-32f1374971d0",
+  "title" : "告警名称",
+  "contentLength" : 84,
+  "preview" : "## 告警名称 - **告警名**: `ServiceUnavailable` - **告警级别**: 紧急 - **触发条件**: 服务健康检查失败或错误率超过50%"
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 2,
+  "chunkKey" : "service_unavailable.md#2",
+  "chunkId" : "9956e68c-e737-30b3-931e-7627c5875737",
+  "title" : "问题描述",
+  "contentLength" : 65,
+  "preview" : "## 问题描述 服务不可用是最严重的故障，会导致： - 用户无法访问服务 - 业务完全中断 - 可能造成经济损失 - 影响公司声誉"
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 3,
+  "chunkKey" : "service_unavailable.md#3",
+  "chunkId" : "16a6724a-80fa-3732-893d-f5495b60aa57",
+  "title" : "排查步骤",
+  "contentLength" : 7,
+  "preview" : "## 排查步骤"
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 4,
+  "chunkKey" : "service_unavailable.md#4",
+  "chunkId" : "90a3aecb-03b5-35d1-ac2f-4dbbbec59258",
+  "title" : "步骤1: 获取当前时间",
+  "contentLength" : 66,
+  "preview" : "### 步骤1: 获取当前时间 **工具**: `get_current_time` **目的**: 记录故障发生时间，用于后续分析"
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 5,
+  "chunkKey" : "service_unavailable.md#5",
+  "chunkId" : "2f77d929-0188-3fa0-9070-7fb4dcb8adc3",
+  "title" : "步骤2: 查询服务状态日志",
+  "contentLength" : 318,
+  "preview" : "### 步骤2: 查询服务状态日志 **工具**: `query_logs` **参数要求**: - **地域**: `ap-guangzhou` - **日志主题**: `application-logs` - **时间范围**: 最近1..."
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 6,
+  "chunkKey" : "service_unavailable.md#6",
+  "chunkId" : "a759f2a9-1d45-33f2-ad42-14c7b7306fa0",
+  "title" : "步骤3: 查询系统事件日志",
+  "contentLength" : 162,
+  "preview" : "### 步骤3: 查询系统事件日志 **工具**: `query_logs` **参数要求**: - **地域**: `ap-guangzhou` - **日志主题**: `system-events` - **查询条件**: `event..."
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 7,
+  "chunkKey" : "service_unavailable.md#7",
+  "chunkId" : "810cd21c-7c61-3629-b982-4d54d1596965",
+  "title" : "步骤4: 检查依赖服务状态",
+  "contentLength" : 164,
+  "preview" : "### 步骤4: 检查依赖服务状态 **工具**: `query_logs` **参数要求**: - **地域**: `ap-guangzhou` - **日志主题**: `application-logs` - **查询条件**: `do..."
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 8,
+  "chunkKey" : "service_unavailable.md#8",
+  "chunkId" : "86bfdab6-92a5-3c72-8d4b-1732de0b0e60",
+  "title" : "常见原因分析",
+  "contentLength" : 9,
+  "preview" : "## 常见原因分析"
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 9,
+  "chunkKey" : "service_unavailable.md#9",
+  "chunkId" : "5b458853-8d05-3ebd-a124-b6f9156ee2a4",
+  "title" : "原因1: 应用崩溃或无法启动",
+  "contentLength" : 280,
+  "preview" : "### 原因1: 应用崩溃或无法启动 **特征**: - 所有实例都无法响应 - 日志中有启动失败记录 - 可能有OOM或其他致命错误 - 健康检查全部失败  **处理方案**: 1. **立即回滚**:     - 如果是新版本发布后出现..."
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 10,
+  "chunkKey" : "service_unavailable.md#10",
+  "chunkId" : "94e11780-c491-38c3-bc30-aa24369d6549",
+  "title" : "原因2: 数据库连接失败",
+  "contentLength" : 306,
+  "preview" : "### 原因2: 数据库连接失败 **特征**: - 日志中有数据库连接错误 - \"Connection refused\" 或 \"Too many connections\" - 数据库服务异常 - 连接池耗尽  **处理方案**: 1. *..."
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 11,
+  "chunkKey" : "service_unavailable.md#11",
+  "chunkId" : "2c186d91-9c50-35db-a8d9-9e3535ea157d",
+  "title" : "原因3: 依赖服务故障",
+  "contentLength" : 262,
+  "preview" : "### 原因3: 依赖服务故障 **特征**: - 日志中有调用第三方服务失败 - Redis、MQ等中间件不可用 - 网络连接超时 - 级联故障  **处理方案**: 1. **快速降级**:    - 启用熔断机制    - 跳过非关键..."
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 12,
+  "chunkKey" : "service_unavailable.md#12",
+  "chunkId" : "e06b1c9d-9e3e-36ea-bd44-0f7611cb40fe",
+  "title" : "原因4: 配置错误",
+  "contentLength" : 244,
+  "preview" : "### 原因4: 配置错误 **特征**: - 最近有配置变更 - 日志中有配置加载错误 - 特定环境变量缺失 - 启动参数错误  **处理方案**: 1. **回滚配置**:    - 恢复到上一个正确的配置    - 检查配置文件语法 ..."
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 13,
+  "chunkKey" : "service_unavailable.md#13",
+  "chunkId" : "a8fb8db5-3f19-3abe-9343-34b994537780",
+  "title" : "原因5: 资源耗尽",
+  "contentLength" : 242,
+  "preview" : "### 原因5: 资源耗尽 **特征**: - 磁盘空间满 - 文件描述符耗尽 - 端口被占用 - 内存不足导致OOM  **处理方案**: 1. **清理资源**:    - 清理磁盘空间（日志、临时文件）    - 释放文件描述符   ..."
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 14,
+  "chunkKey" : "service_unavailable.md#14",
+  "chunkId" : "e8dc0dda-62f6-3476-a411-2641e9309c48",
+  "title" : "原因6: 网络故障",
+  "contentLength" : 265,
+  "preview" : "### 原因6: 网络故障 **特征**: - 无法访问服务 - 网络连接超时 - 负载均衡器异常 - DNS解析失败  **处理方案**: 1. **检查网络**:    - 测试网络连通性（ping, telnet）    - 检查防火..."
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 15,
+  "chunkKey" : "service_unavailable.md#15",
+  "chunkId" : "bf98c2c8-90c6-3059-90f0-f4465c1c9f91",
+  "title" : "紧急处理流程",
+  "contentLength" : 9,
+  "preview" : "## 紧急处理流程"
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 16,
+  "chunkKey" : "service_unavailable.md#16",
+  "chunkId" : "534615a9-ad93-3399-8653-b6ba6ee26494",
+  "title" : "第一时间（1分钟内）",
+  "contentLength" : 134,
+  "preview" : "### 第一时间（1分钟内） 1. **确认故障**: 通过监控和日志确认服务确实不可用 2. **启动应急**: 通知相关人员，启动应急响应流程 3. **止损措施**:     - 如果是部分实例故障，摘除故障实例    - 如果是全部..."
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 17,
+  "chunkKey" : "service_unavailable.md#17",
+  "chunkId" : "1d63a92c-c891-37ed-9da7-67b30204b400",
+  "title" : "5分钟内",
+  "contentLength" : 107,
+  "preview" : "### 5分钟内 1. **快速定位**: 查看日志和监控，快速定位问题原因 2. **决策处理**:     - 如果能快速修复，立即修复    - 如果无法快速修复，执行回滚    - 如果是依赖故障，启用降级"
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 18,
+  "chunkKey" : "service_unavailable.md#18",
+  "chunkId" : "5d15c838-67ee-3172-a278-96a3e17d0054",
+  "title" : "15分钟内",
+  "contentLength" : 81,
+  "preview" : "### 15分钟内 1. **恢复服务**: 通过回滚、修复或降级恢复服务 2. **验证功能**: 确认核心功能可用 3. **监控观察**: 持续监控服务状态"
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 19,
+  "chunkKey" : "service_unavailable.md#19",
+  "chunkId" : "1f14a372-3295-3fb0-9daf-541ca3fe14ad",
+  "title" : "30分钟内",
+  "contentLength" : 81,
+  "preview" : "### 30分钟内 1. **全面验证**: 验证所有功能正常 2. **通知用户**: 如果影响用户，发布公告 3. **初步总结**: 记录故障原因和处理过程"
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 20,
+  "chunkKey" : "service_unavailable.md#20",
+  "chunkId" : "ba6f3b14-23c8-31ad-af56-40d50ccbcc73",
+  "title" : "验证步骤",
+  "contentLength" : 134,
+  "preview" : "## 验证步骤 1. **健康检查**: 确认所有实例健康检查通过 2. **功能测试**: 测试核心业务功能 3. **性能验证**: 确认响应时间和吞吐量正常 4. **错误率**: 确认错误率降到正常水平（<1%） 5. **持续监控..."
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 21,
+  "chunkKey" : "service_unavailable.md#21",
+  "chunkId" : "b9be9c0b-5e47-31a0-bd63-66181ef699fe",
+  "title" : "预防措施",
+  "contentLength" : 300,
+  "preview" : "## 预防措施 1. **高可用架构**:    - 多实例部署    - 多地域容灾    - 数据库主从复制    - 关键服务冗余  2. **监控告警**:    - 完善的健康检查    - 实时监控告警    - 自动故障转移 ..."
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 22,
+  "chunkKey" : "service_unavailable.md#22",
+  "chunkId" : "f0682a4e-7ccc-3bb3-b953-f4e99007328f",
+  "title" : "故障复盘",
+  "contentLength" : 159,
+  "preview" : "## 故障复盘 故障恢复后，必须进行复盘：  1. **故障时间线**: 记录故障发生、发现、处理、恢复的完整时间线 2. **根因分析**: 深入分析故障根本原因 3. **影响评估**: 评估故障影响范围和损失 4. **改进措施**:..."
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 23,
+  "chunkKey" : "service_unavailable.md#23",
+  "chunkId" : "43c1661b-1ff4-3e0a-b24c-eaac7e0d164f",
+  "title" : "相关告警",
+  "contentLength" : 129,
+  "preview" : "## 相关告警 - `HighErrorRate`: 错误率过高 - `HealthCheckFailed`: 健康检查失败 - `AllInstancesDown`: 所有实例下线 - `DatabaseConnectionFailed`..."
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 24,
+  "chunkKey" : "service_unavailable.md#24",
+  "chunkId" : "efb2ecfe-8aa2-3f4d-81c0-40eed8431286",
+  "title" : "紧急联系方式",
+  "contentLength" : 153,
+  "preview" : "## 紧急联系方式 - **运维值班**: 400-xxx-1111（24小时） - **开发值班**: 400-xxx-2222（24小时） - **DBA值班**: 400-xxx-3333（24小时） - **网络团队**: 400-..."
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 25,
+  "chunkKey" : "service_unavailable.md#25",
+  "chunkId" : "fe401bca-0c78-3fc1-b4ce-97a10d480d52",
+  "title" : "升级机制",
+  "contentLength" : 77,
+  "preview" : "## 升级机制 - **15分钟未恢复**: 升级到技术总监 - **30分钟未恢复**: 升级到CTO - **1小时未恢复**: 启动最高级别应急响应"
+}, {
+  "source" : "service_unavailable.md",
+  "normalizedSource" : "aiops-docs/service_unavailable.md",
+  "chunkIndex" : 26,
+  "chunkKey" : "service_unavailable.md#26",
+  "chunkId" : "df4b4449-8832-3ce5-8bc1-1af33e5bd0b5",
+  "title" : "参考文档",
+  "contentLength" : 148,
+  "preview" : "## 参考文档 - [应急响应流程](internal-docs/emergency-response.md) - [故障处理手册](internal-docs/incident-handbook.md) - [高可用架构设计](inter..."
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 0,
+  "chunkKey" : "slow_response.md#0",
+  "chunkId" : "b12a1b0d-5de3-3f84-81c7-9b7d278fb08f",
+  "title" : "服务响应时间过长告警处理方案",
+  "contentLength" : 16,
+  "preview" : "# 服务响应时间过长告警处理方案"
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 1,
+  "chunkKey" : "slow_response.md#1",
+  "chunkId" : "4c7d0c9f-6e6b-381a-bad5-7cbb2a0c2a09",
+  "title" : "告警名称",
+  "contentLength" : 77,
+  "preview" : "## 告警名称 - **告警名**: `SlowResponse` - **告警级别**: 警告 - **触发条件**: P99响应时间持续5分钟超过3秒"
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 2,
+  "chunkKey" : "slow_response.md#2",
+  "chunkId" : "6f56d3ec-d203-3bc8-bd01-42ed7ccc4dcb",
+  "title" : "问题描述",
+  "contentLength" : 64,
+  "preview" : "## 问题描述 当服务的响应时间持续超过阈值时，会导致： - 用户体验下降 - 请求堆积 - 可能触发超时错误 - 影响下游服务"
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 3,
+  "chunkKey" : "slow_response.md#3",
+  "chunkId" : "a0ac6178-6c20-3113-ad04-b607375d4b45",
+  "title" : "排查步骤",
+  "contentLength" : 7,
+  "preview" : "## 排查步骤"
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 4,
+  "chunkKey" : "slow_response.md#4",
+  "chunkId" : "1b9e5c98-e3d7-3981-a340-c62cced607cd",
+  "title" : "步骤1: 获取当前时间",
+  "contentLength" : 62,
+  "preview" : "### 步骤1: 获取当前时间 **工具**: `get_current_time` **目的**: 确定告警发生的准确时间"
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 5,
+  "chunkKey" : "slow_response.md#5",
+  "chunkId" : "dd94e8c2-43e6-3d0a-bd43-1f34b8fdf802",
+  "title" : "步骤2: 查询应用性能日志",
+  "contentLength" : 304,
+  "preview" : "### 步骤2: 查询应用性能日志 **工具**: `query_logs` **参数要求**: - **地域**: `ap-guangzhou` - **日志主题**: `application-logs` - **时间范围**: 最近3..."
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 6,
+  "chunkKey" : "slow_response.md#6",
+  "chunkId" : "62eb1ca6-100f-30a7-9400-34226cad83b5",
+  "title" : "步骤3: 查询数据库慢查询日志",
+  "contentLength" : 160,
+  "preview" : "### 步骤3: 查询数据库慢查询日志 **工具**: `query_logs` **参数要求**: - **地域**: `ap-guangzhou` - **日志主题**: `database-slow-query` - **时间范围**..."
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 7,
+  "chunkKey" : "slow_response.md#7",
+  "chunkId" : "c71c9d6f-774f-3b28-8ecd-4a6a3f7b9cf1",
+  "title" : "步骤4: 查询系统资源使用情况",
+  "contentLength" : 155,
+  "preview" : "### 步骤4: 查询系统资源使用情况 **工具**: `query_logs` **参数要求**: - **地域**: `ap-guangzhou` - **日志主题**: `system-metrics` - **查询条件**: `cp..."
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 8,
+  "chunkKey" : "slow_response.md#8",
+  "chunkId" : "4da16cfc-5c89-3480-81db-e57e8a5ad330",
+  "title" : "常见原因分析",
+  "contentLength" : 9,
+  "preview" : "## 常见原因分析"
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 9,
+  "chunkKey" : "slow_response.md#9",
+  "chunkId" : "47a69866-fea8-396c-8e26-23853f52a5ff",
+  "title" : "原因1: 数据库慢查询",
+  "contentLength" : 294,
+  "preview" : "### 原因1: 数据库慢查询 **特征**: - 慢查询日志中有大量记录 - 数据库CPU使用率高 - 特定SQL执行时间长 - 数据库连接池接近满载  **处理方案**: 1. **立即优化**:     - 找出最慢的SQL语句   ..."
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 10,
+  "chunkKey" : "slow_response.md#10",
+  "chunkId" : "871e824c-fddd-3d83-967a-578d378858c8",
+  "title" : "原因2: 外部API调用超时",
+  "contentLength" : 271,
+  "preview" : "### 原因2: 外部API调用超时 **特征**: - 日志中有第三方API调用记录 - 特定接口响应时间长 - 可能有网络超时错误 - 下游服务响应慢  **处理方案**: 1. **设置合理超时**:    - 调整HTTP客户端超时..."
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 11,
+  "chunkKey" : "slow_response.md#11",
+  "chunkId" : "d1cb5820-8721-3126-a148-0f566d561089",
+  "title" : "原因3: 代码性能问题",
+  "contentLength" : 265,
+  "preview" : "### 原因3: 代码性能问题 **特征**: - CPU使用率高 - 特定代码路径执行慢 - 日志中有性能警告 - 无明显外部依赖问题  **处理方案**: 1. **性能分析**:    - 使用APM工具定位慢方法    - 查看火焰..."
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 12,
+  "chunkKey" : "slow_response.md#12",
+  "chunkId" : "2c93f028-74f6-3bf0-834d-1acc6503d6e4",
+  "title" : "原因4: 缓存失效或缓存穿透",
+  "contentLength" : 259,
+  "preview" : "### 原因4: 缓存失效或缓存穿透 **特征**: - 缓存命中率突然下降 - 数据库查询量激增 - 特定时间点响应变慢 - 日志中有缓存miss记录  **处理方案**: 1. **缓存预热**:    - 重启后立即预热热点数据   ..."
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 13,
+  "chunkKey" : "slow_response.md#13",
+  "chunkId" : "da909e8e-1615-3032-8895-87dbb2e79f38",
+  "title" : "原因5: 系统资源不足",
+  "contentLength" : 243,
+  "preview" : "### 原因5: 系统资源不足 **特征**: - CPU或内存使用率高 - 磁盘IO繁忙 - 网络带宽占用高 - 系统负载过高  **处理方案**: 1. **资源扩容**:    - 增加实例数量（水平扩展）    - 升级实例规格（垂..."
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 14,
+  "chunkKey" : "slow_response.md#14",
+  "chunkId" : "ea66d146-0ddd-3802-a901-5193812dae80",
+  "title" : "原因6: 网络问题",
+  "contentLength" : 240,
+  "preview" : "### 原因6: 网络问题 **特征**: - 跨地域调用延迟高 - 网络丢包率增加 - 特定时间段网络拥堵 - 日志中有网络超时错误  **处理方案**: 1. **网络优化**:    - 使用CDN加速    - 优化网络路由    ..."
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 15,
+  "chunkKey" : "slow_response.md#15",
+  "chunkId" : "882dd2d9-ae0a-31fe-a91a-ee801e716437",
+  "title" : "紧急处理措施",
+  "contentLength" : 9,
+  "preview" : "## 紧急处理措施"
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 16,
+  "chunkKey" : "slow_response.md#16",
+  "chunkId" : "2fc26ee5-bc5f-3d17-b3c5-dc33c0111729",
+  "title" : "立即操作（5分钟内）",
+  "contentLength" : 109,
+  "preview" : "### 立即操作（5分钟内） 1. **扩容**: 如果是资源不足，立即增加实例 2. **限流**: 保护系统不被压垮 3. **降级**: 关闭非核心功能 4. **重启**: 如果是内存泄漏等问题，重启受影响实例"
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 17,
+  "chunkKey" : "slow_response.md#17",
+  "chunkId" : "13505eb9-3d27-32fe-a9ee-baf4a3013a84",
+  "title" : "短期措施（30分钟内）",
+  "contentLength" : 113,
+  "preview" : "### 短期措施（30分钟内） 1. **定位根因**: 通过日志分析找出慢的环节 2. **临时优化**:     - 增加缓存    - 优化慢SQL    - 调整超时时间 3. **监控观察**: 持续观察响应时间变化"
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 18,
+  "chunkKey" : "slow_response.md#18",
+  "chunkId" : "6fc0b57b-874d-3003-920f-21daa0a1b22d",
+  "title" : "长期优化",
+  "contentLength" : 102,
+  "preview" : "### 长期优化 1. **性能优化**: 代码层面的性能优化 2. **架构优化**: 引入缓存、消息队列等 3. **监控完善**: 增加更细粒度的性能监控 4. **压力测试**: 定期进行性能压测"
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 19,
+  "chunkKey" : "slow_response.md#19",
+  "chunkId" : "c4f64a41-84ea-353c-b012-2a69ee5765c5",
+  "title" : "验证步骤",
+  "contentLength" : 74,
+  "preview" : "## 验证步骤 1. 确认P99响应时间降到正常水平（<1秒） 2. 检查错误率是否下降 3. 观察用户投诉是否减少 4. 持续监控30分钟确保稳定"
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 20,
+  "chunkKey" : "slow_response.md#20",
+  "chunkId" : "e4b93edd-963d-3e5f-966c-c9037ee65823",
+  "title" : "性能优化检查清单",
+  "contentLength" : 150,
+  "preview" : "## 性能优化检查清单 - [ ] 数据库查询是否有索引 - [ ] 是否有N+1查询问题 - [ ] 缓存策略是否合理 - [ ] 外部API调用是否有超时设置 - [ ] 是否有不必要的同步等待 - [ ] 日志级别是否过于详细 - [..."
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 21,
+  "chunkKey" : "slow_response.md#21",
+  "chunkId" : "0c783e27-7466-3bfe-8b9c-a0597470003d",
+  "title" : "相关监控指标",
+  "contentLength" : 159,
+  "preview" : "## 相关监控指标 - **响应时间**: P50, P90, P99, P999 - **吞吐量**: QPS, TPS - **错误率**: 4xx, 5xx错误比例 - **资源使用**: CPU, 内存, 网络, 磁盘IO - **..."
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 22,
+  "chunkKey" : "slow_response.md#22",
+  "chunkId" : "60df34fe-0ee7-3e85-9c6c-a23c5b78f132",
+  "title" : "相关告警",
+  "contentLength" : 143,
+  "preview" : "## 相关告警 - `HighCPUUsage`: CPU使用率过高 - `HighMemoryUsage`: 内存使用率过高 - `DatabaseSlowQuery`: 数据库慢查询 - `HighErrorRate`: 错误率过高 -..."
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 23,
+  "chunkKey" : "slow_response.md#23",
+  "chunkId" : "9a64bc59-33cf-3253-8a9a-a71bc432a41f",
+  "title" : "联系方式",
+  "contentLength" : 132,
+  "preview" : "## 联系方式 - **运维团队**: ops-team@company.com - **开发团队**: dev-team@company.com - **DBA团队**: dba-team@company.com - **紧急电话**: ..."
+}, {
+  "source" : "slow_response.md",
+  "normalizedSource" : "aiops-docs/slow_response.md",
+  "chunkIndex" : 24,
+  "chunkKey" : "slow_response.md#24",
+  "chunkId" : "f4507bcc-991c-37bd-b32e-902798230a0e",
+  "title" : "参考文档",
+  "contentLength" : 165,
+  "preview" : "## 参考文档 - [性能优化最佳实践](internal-docs/performance-optimization.md) - [数据库优化指南](internal-docs/database-optimization.md) - [缓..."
+} ]

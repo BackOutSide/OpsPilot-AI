@@ -1,0 +1,161 @@
+[ {
+  "mode" : "DENSE_ONLY",
+  "samples" : 150,
+  "hitAt1Count" : 108,
+  "hitAt3Count" : 129,
+  "recallAt10Count" : 146,
+  "noHitCount" : 21,
+  "hitAt1" : 0.72,
+  "hitAt3" : 0.86,
+  "recallAt10" : 0.9733333333333334,
+  "mrrAt3" : 0.7822222222222222,
+  "avgFirstHitRank" : 1.2170542635658914,
+  "detailFile" : "eval\\chunk_eval_results_dense_only.json",
+  "categoryHitAt3" : {
+    "cpu" : {
+      "samples" : 30,
+      "hitAt3Count" : 22,
+      "hitAt3" : 0.7333333333333333
+    },
+    "disk" : {
+      "samples" : 30,
+      "hitAt3Count" : 28,
+      "hitAt3" : 0.9333333333333333
+    },
+    "memory" : {
+      "samples" : 30,
+      "hitAt3Count" : 25,
+      "hitAt3" : 0.8333333333333334
+    },
+    "svc" : {
+      "samples" : 30,
+      "hitAt3Count" : 30,
+      "hitAt3" : 1.0
+    },
+    "slow" : {
+      "samples" : 30,
+      "hitAt3Count" : 24,
+      "hitAt3" : 0.8
+    }
+  }
+}, {
+  "mode" : "BM25_ONLY",
+  "samples" : 150,
+  "hitAt1Count" : 96,
+  "hitAt3Count" : 122,
+  "recallAt10Count" : 142,
+  "noHitCount" : 28,
+  "hitAt1" : 0.64,
+  "hitAt3" : 0.8133333333333334,
+  "recallAt10" : 0.9466666666666667,
+  "mrrAt3" : 0.7188888888888889,
+  "avgFirstHitRank" : 1.2704918032786885,
+  "detailFile" : "eval\\chunk_eval_results_bm25_only.json",
+  "categoryHitAt3" : {
+    "cpu" : {
+      "samples" : 30,
+      "hitAt3Count" : 21,
+      "hitAt3" : 0.7
+    },
+    "disk" : {
+      "samples" : 30,
+      "hitAt3Count" : 26,
+      "hitAt3" : 0.8666666666666667
+    },
+    "memory" : {
+      "samples" : 30,
+      "hitAt3Count" : 24,
+      "hitAt3" : 0.8
+    },
+    "svc" : {
+      "samples" : 30,
+      "hitAt3Count" : 25,
+      "hitAt3" : 0.8333333333333334
+    },
+    "slow" : {
+      "samples" : 30,
+      "hitAt3Count" : 26,
+      "hitAt3" : 0.8666666666666667
+    }
+  }
+}, {
+  "mode" : "HYBRID_RRF",
+  "samples" : 150,
+  "hitAt1Count" : 112,
+  "hitAt3Count" : 134,
+  "recallAt10Count" : 147,
+  "noHitCount" : 16,
+  "hitAt1" : 0.7466666666666667,
+  "hitAt3" : 0.8933333333333333,
+  "recallAt10" : 0.98,
+  "mrrAt3" : 0.8155555555555555,
+  "avgFirstHitRank" : 1.1940298507462686,
+  "detailFile" : "eval\\chunk_eval_results_hybrid_rrf.json",
+  "categoryHitAt3" : {
+    "cpu" : {
+      "samples" : 30,
+      "hitAt3Count" : 24,
+      "hitAt3" : 0.8
+    },
+    "disk" : {
+      "samples" : 30,
+      "hitAt3Count" : 28,
+      "hitAt3" : 0.9333333333333333
+    },
+    "memory" : {
+      "samples" : 30,
+      "hitAt3Count" : 26,
+      "hitAt3" : 0.8666666666666667
+    },
+    "svc" : {
+      "samples" : 30,
+      "hitAt3Count" : 30,
+      "hitAt3" : 1.0
+    },
+    "slow" : {
+      "samples" : 30,
+      "hitAt3Count" : 26,
+      "hitAt3" : 0.8666666666666667
+    }
+  }
+}, {
+  "mode" : "HYBRID_RRF_RERANK",
+  "samples" : 150,
+  "hitAt1Count" : 118,
+  "hitAt3Count" : 135,
+  "recallAt10Count" : 147,
+  "noHitCount" : 15,
+  "hitAt1" : 0.7866666666666666,
+  "hitAt3" : 0.9,
+  "recallAt10" : 0.98,
+  "mrrAt3" : 0.8366666666666667,
+  "avgFirstHitRank" : 1.1703703703703703,
+  "detailFile" : "eval\\chunk_eval_results_hybrid_rrf_rerank.json",
+  "categoryHitAt3" : {
+    "cpu" : {
+      "samples" : 30,
+      "hitAt3Count" : 25,
+      "hitAt3" : 0.8333333333333334
+    },
+    "disk" : {
+      "samples" : 30,
+      "hitAt3Count" : 28,
+      "hitAt3" : 0.9333333333333333
+    },
+    "memory" : {
+      "samples" : 30,
+      "hitAt3Count" : 25,
+      "hitAt3" : 0.8333333333333334
+    },
+    "svc" : {
+      "samples" : 30,
+      "hitAt3Count" : 29,
+      "hitAt3" : 0.9666666666666667
+    },
+    "slow" : {
+      "samples" : 30,
+      "hitAt3Count" : 28,
+      "hitAt3" : 0.9333333333333333
+    }
+  }
+} ]

@@ -27,3 +27,138 @@
 {"id":"slow-003","query":"慢响应告警时怎么查数据库慢查询日志？","expectedSource":"slow_response.md","expectedChunkIndexes":[6],"note":"命中步骤3: 查询数据库慢查询日志"}
 {"id":"slow-004","query":"如果慢响应是外部API调用超时导致的，应该看哪部分？","expectedSource":"slow_response.md","expectedChunkIndexes":[10],"note":"命中原因2: 外部API调用超时"}
 {"id":"slow-005","query":"慢响应问题有哪些性能优化检查项？","expectedSource":"slow_response.md","expectedChunkIndexes":[20],"note":"命中性能优化检查清单"}
+
+{"id":"cpu-nl-001","query":"机器 CPU 打满后用户侧会感觉到什么异常？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[2],"note":"自然问法：CPU高的影响"}
+{"id":"cpu-nl-002","query":"CPU 飙高了，我应该先去哪个日志主题里看系统指标？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[5],"note":"自然问法：CPU系统日志查询"}
+{"id":"cpu-nl-003","query":"怎么从排查信息里判断到底哪个进程最吃 CPU？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[6],"note":"自然问法：CPU高消耗进程分析"}
+{"id":"cpu-nl-004","query":"应用 CPU 高但业务逻辑不复杂，怀疑慢 SQL 时该怎么处理？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[12],"note":"自然问法：数据库慢查询导致CPU高"}
+{"id":"cpu-nl-005","query":"CPU 告警刚触发，5 分钟内有哪些止血动作？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[14],"note":"自然问法：CPU立即操作"}
+
+{"id":"disk-nl-001","query":"磁盘快满了会对服务和数据写入造成哪些风险？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[2],"note":"自然问法：磁盘高影响"}
+{"id":"disk-nl-002","query":"收到磁盘容量告警后，怎么确认具体分区和挂载点的使用率？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[5],"note":"自然问法：磁盘系统使用情况"}
+{"id":"disk-nl-003","query":"磁盘空间被打满了，怎么定位是哪个目录或文件占用最多？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[7],"note":"自然问法：磁盘占用分析"}
+{"id":"disk-nl-004","query":"日志膨胀把磁盘占满时，文档里建议怎么处理？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[9],"note":"自然问法：日志文件过大"}
+{"id":"disk-nl-005","query":"线上想快速找出大文件，应该用哪些排查命令？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[23],"note":"自然问法：查找大文件命令"}
+
+{"id":"memory-nl-001","query":"内存水位一直很高，可能会引起哪些线上问题？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[2],"note":"自然问法：内存高影响"}
+{"id":"memory-nl-002","query":"内存告警来了，要看 system-metrics 里的哪些字段？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[5],"note":"自然问法：内存监控日志"}
+{"id":"memory-nl-003","query":"怎么继续判断内存到底是堆、缓存还是进程占用？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[7],"note":"自然问法：内存使用分析"}
+{"id":"memory-nl-004","query":"如果内存一直涨不释放，怀疑泄漏时应该参考哪段处理方案？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[9],"note":"自然问法：内存泄漏"}
+{"id":"memory-nl-005","query":"排查 Java 服务内存问题时，怎么查看 JVM 堆和非堆的使用？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[21],"note":"自然问法：JVM内存查看"}
+
+{"id":"svc-nl-001","query":"服务挂掉或不可用时，业务侧通常会受到什么影响？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[2],"note":"自然问法：服务不可用影响"}
+{"id":"svc-nl-002","query":"服务不可用后，我要先看哪些服务状态和健康检查日志？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[5],"note":"自然问法：服务状态日志"}
+{"id":"svc-nl-003","query":"怀疑 pod 重启或者 OOMKilled，应该去哪里查系统事件？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[6],"note":"自然问法：系统事件日志"}
+{"id":"svc-nl-004","query":"如果服务起不来是数据库连接失败，应该按什么方案处理？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[10],"note":"自然问法：数据库连接失败"}
+{"id":"svc-nl-005","query":"服务不可用刚发生的一分钟内，值班同学应该先做什么？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[16],"note":"自然问法：服务不可用第一时间处理"}
+
+{"id":"slow-nl-001","query":"接口越来越慢时，用户侧和监控上一般会看到什么现象？","expectedSource":"slow_response.md","expectedChunkIndexes":[2],"note":"自然问法：慢响应表现"}
+{"id":"slow-nl-002","query":"接口延迟升高后，应该先查哪些应用性能日志？","expectedSource":"slow_response.md","expectedChunkIndexes":[5],"note":"自然问法：应用性能日志"}
+{"id":"slow-nl-003","query":"怀疑慢查询拖慢接口，怎么去查数据库慢 SQL？","expectedSource":"slow_response.md","expectedChunkIndexes":[6],"note":"自然问法：慢查询日志"}
+{"id":"slow-nl-004","query":"如果是第三方接口超时导致响应慢，文档建议怎么定位和处理？","expectedSource":"slow_response.md","expectedChunkIndexes":[10],"note":"自然问法：外部API超时"}
+{"id":"slow-nl-005","query":"慢响应排查完后，有哪些性能优化项需要检查？","expectedSource":"slow_response.md","expectedChunkIndexes":[20],"note":"自然问法：性能优化检查"}
+
+{"id":"cpu-exp-001","query":"HighCPUUsage 这个告警的触发阈值和级别是什么？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[1],"note":"扩展样本：告警名称与触发条件"}
+{"id":"cpu-exp-002","query":"CPU 使用率超过 80% 持续 5 分钟对应哪个告警？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[1],"note":"扩展样本：告警条件反查"}
+{"id":"cpu-exp-003","query":"CPU 高排查时为什么第一步要获取当前时间？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[4],"note":"扩展样本：步骤1"}
+{"id":"cpu-exp-004","query":"CPU 告警排查时系统指标日志要查询最近多久？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[5],"note":"扩展样本：系统日志时间范围"}
+{"id":"cpu-exp-005","query":"CPU 高时如果要看应用有没有慢请求，应该查询哪类日志？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[7],"note":"扩展样本：应用日志查询"}
+{"id":"cpu-exp-006","query":"单个进程 CPU 接近 100% 且日志重复报错，可能是什么原因？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[9],"note":"扩展样本：死循环或无限递归"}
+{"id":"cpu-exp-007","query":"如果 CPU 高是流量突增导致的，处理方案是什么？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[10],"note":"扩展样本：流量突增"}
+{"id":"cpu-exp-008","query":"CPU 使用率周期性升高并且固定时间出现，可能是什么问题？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[11],"note":"扩展样本：定时任务重叠"}
+{"id":"cpu-exp-009","query":"CPU 高伴随慢 SQL 时，需要检查哪些数据库问题？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[12],"note":"扩展样本：数据库查询慢"}
+{"id":"cpu-exp-010","query":"CPU 告警时哪些情况下应该立即扩容或限流？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[14],"note":"扩展样本：立即操作"}
+{"id":"cpu-exp-011","query":"CPU 高 30 分钟内的短期处理动作有哪些？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[15],"note":"扩展样本：短期措施"}
+{"id":"cpu-exp-012","query":"CPU 使用率问题长期应该怎么优化？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[16],"note":"扩展样本：长期优化"}
+{"id":"cpu-exp-013","query":"CPU 告警处理后如何确认恢复正常？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[17],"note":"扩展样本：验证步骤"}
+{"id":"cpu-exp-014","query":"CPU 高可能和哪些其他告警有关？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[18],"note":"扩展样本：相关告警"}
+{"id":"cpu-exp-015","query":"HighLoadAverage 和 SlowResponse 与 CPU 告警有什么关联？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[18],"note":"扩展样本：关联告警"}
+{"id":"cpu-exp-016","query":"CPU 高时要记录哪些进程维度的信息？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[6],"note":"扩展样本：进程信息字段"}
+{"id":"cpu-exp-017","query":"CPU 告警排查时 query_logs 的系统指标主题是什么？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[5],"note":"扩展样本：工具参数"}
+{"id":"cpu-exp-018","query":"CPU 高但无明显错误，多进程均匀升高时应该怀疑什么？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[10],"note":"扩展样本：流量突增特征"}
+{"id":"cpu-exp-019","query":"定时任务导致 CPU 高时，文档建议调整什么？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[11],"note":"扩展样本：定时任务处理"}
+{"id":"cpu-exp-020","query":"处理 CPU 高后需要观察多久确认不再复现？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[17],"note":"扩展样本：恢复观察"}
+
+{"id":"disk-exp-001","query":"HighDiskUsage 告警有哪些严重等级和触发条件？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[1],"note":"扩展样本：磁盘告警名称"}
+{"id":"disk-exp-002","query":"磁盘使用率超过 90% 时属于什么级别？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[1],"note":"扩展样本：磁盘严重级别"}
+{"id":"disk-exp-003","query":"磁盘满了为什么会影响日志记录和数据库？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[2],"note":"扩展样本：磁盘高影响"}
+{"id":"disk-exp-004","query":"磁盘告警第一步为什么要记录告警时间？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[4],"note":"扩展样本：步骤1"}
+{"id":"disk-exp-005","query":"排查磁盘容量时 system-metrics 应该查哪些字段？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[5],"note":"扩展样本：系统磁盘指标"}
+{"id":"disk-exp-006","query":"磁盘告警时应用日志里 No space left 应该怎么查？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[6],"note":"扩展样本：应用日志查询"}
+{"id":"disk-exp-007","query":"如何从日志里判断哪个目录占用空间最大？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[7],"note":"扩展样本：磁盘占用分析"}
+{"id":"disk-exp-008","query":"日志级别设置为 DEBUG 导致磁盘满，应该看哪段处理方案？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[9],"note":"扩展样本：日志文件过大"}
+{"id":"disk-exp-009","query":"临时文件堆积导致磁盘空间不足时怎么清理？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[10],"note":"扩展样本：临时文件堆积"}
+{"id":"disk-exp-010","query":"业务数据量激增导致数据库文件增长，应该怎么处理？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[11],"note":"扩展样本：数据文件增长"}
+{"id":"disk-exp-011","query":"备份文件占满磁盘时应该如何处理？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[12],"note":"扩展样本：备份文件占用"}
+{"id":"disk-exp-012","query":"应用缓存目录占用大量空间时该怎么处理？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[13],"note":"扩展样本：缓存文件过多"}
+{"id":"disk-exp-013","query":"Docker 镜像和停止容器占用磁盘时应该怎么清理？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[14],"note":"扩展样本：Docker资源清理"}
+{"id":"disk-exp-014","query":"磁盘告警 5 分钟内应该如何快速释放空间？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[16],"note":"扩展样本：立即操作"}
+{"id":"disk-exp-015","query":"磁盘问题 30 分钟内有哪些系统清理和应用优化动作？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[17],"note":"扩展样本：短期措施"}
+{"id":"disk-exp-016","query":"长期避免磁盘满需要做哪些容量规划和日志管理？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[18],"note":"扩展样本：长期优化"}
+{"id":"disk-exp-017","query":"查看磁盘使用率最常用的命令是什么？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[21],"note":"扩展样本：df -h"}
+{"id":"disk-exp-018","query":"如何查看 /var/log 目录大小？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[22],"note":"扩展样本：du 命令"}
+{"id":"disk-exp-019","query":"怎么查找大于 1G 的大文件？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[23],"note":"扩展样本：find 大文件"}
+{"id":"disk-exp-020","query":"磁盘告警恢复后如何验证日志和数据库是否正常？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[30],"note":"扩展样本：验证步骤"}
+
+{"id":"memory-exp-001","query":"HighMemoryUsage 的触发阈值是多少？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[1],"note":"扩展样本：内存告警阈值"}
+{"id":"memory-exp-002","query":"内存使用率超过 85% 持续 5 分钟是什么告警？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[1],"note":"扩展样本：告警条件反查"}
+{"id":"memory-exp-003","query":"内存过高为什么会导致 OOM 和频繁 GC？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[2],"note":"扩展样本：问题描述"}
+{"id":"memory-exp-004","query":"排查内存告警为什么要先获取当前时间？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[4],"note":"扩展样本：步骤1"}
+{"id":"memory-exp-005","query":"内存告警查询 system-metrics 时应该看哪些指标？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[5],"note":"扩展样本：系统监控日志"}
+{"id":"memory-exp-006","query":"内存高时应用日志里应该查 OutOfMemory 相关信息吗？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[6],"note":"扩展样本：应用日志"}
+{"id":"memory-exp-007","query":"分析内存使用情况时需要关注 GC 和堆内存哪些信息？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[7],"note":"扩展样本：内存分析"}
+{"id":"memory-exp-008","query":"Full GC 后内存无法释放通常说明什么？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[9],"note":"扩展样本：内存泄漏特征"}
+{"id":"memory-exp-009","query":"流量突然增大导致对象激增时应该怎么处理？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[10],"note":"扩展样本：对象激增"}
+{"id":"memory-exp-010","query":"缓存占用过大或者缓存不过期时应该怎么优化？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[11],"note":"扩展样本：缓存配置不当"}
+{"id":"memory-exp-011","query":"大文件上传或数据导入导致内存突增该怎么处理？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[12],"note":"扩展样本：大数据处理"}
+{"id":"memory-exp-012","query":"JVM 堆太小或 GC 算法不合适时应该调整什么？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[13],"note":"扩展样本：JVM参数配置"}
+{"id":"memory-exp-013","query":"内存告警 5 分钟内有哪些止血措施？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[15],"note":"扩展样本：立即操作"}
+{"id":"memory-exp-014","query":"内存问题 30 分钟内为什么要 dump 内存快照？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[16],"note":"扩展样本：短期措施"}
+{"id":"memory-exp-015","query":"长期解决内存问题需要做哪些代码和监控优化？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[17],"note":"扩展样本：长期优化"}
+{"id":"memory-exp-016","query":"内存告警处理后如何验证 GC 和 OOM 是否恢复？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[18],"note":"扩展样本：验证步骤"}
+{"id":"memory-exp-017","query":"怎么用 jmap 查看 JVM 堆内存？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[21],"note":"扩展样本：jmap heap"}
+{"id":"memory-exp-018","query":"如何生成 JVM 堆转储文件用于分析？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[22],"note":"扩展样本：heap dump"}
+{"id":"memory-exp-019","query":"查看 GC 日志可以用什么 jstat 命令？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[23],"note":"扩展样本：jstat gc"}
+{"id":"memory-exp-020","query":"内存高可能伴随哪些 CPU、GC 或慢响应告警？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[24],"note":"扩展样本：相关告警"}
+
+{"id":"svc-exp-001","query":"ServiceUnavailable 是什么级别的告警？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[1],"note":"扩展样本：服务不可用级别"}
+{"id":"svc-exp-002","query":"服务健康检查失败或错误率超过 50% 对应什么告警？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[1],"note":"扩展样本：触发条件"}
+{"id":"svc-exp-003","query":"服务不可用为什么是最严重的故障？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[2],"note":"扩展样本：问题描述"}
+{"id":"svc-exp-004","query":"服务不可用排查时第一步为什么要记录故障时间？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[4],"note":"扩展样本：步骤1"}
+{"id":"svc-exp-005","query":"服务不可用后 application-logs 应该查哪些健康检查错误？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[5],"note":"扩展样本：服务状态日志"}
+{"id":"svc-exp-006","query":"系统事件日志里 PodRestart 和 OOMKilled 用来排查什么？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[6],"note":"扩展样本：系统事件"}
+{"id":"svc-exp-007","query":"服务不可用时如何检查依赖服务是否异常？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[7],"note":"扩展样本：依赖服务状态"}
+{"id":"svc-exp-008","query":"如果新版本发布后所有实例无法响应，应该怀疑什么？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[9],"note":"扩展样本：应用崩溃"}
+{"id":"svc-exp-009","query":"数据库连接 refused 或连接池耗尽导致服务不可用时怎么处理？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[10],"note":"扩展样本：数据库连接失败"}
+{"id":"svc-exp-010","query":"Redis、MQ 或第三方依赖不可用时应该如何降级？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[11],"note":"扩展样本：依赖服务故障"}
+{"id":"svc-exp-011","query":"配置变更后服务起不来，文档建议怎么回滚？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[12],"note":"扩展样本：配置错误"}
+{"id":"svc-exp-012","query":"磁盘满、端口占用或 OOM 导致服务不可用属于哪类原因？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[13],"note":"扩展样本：资源耗尽"}
+{"id":"svc-exp-013","query":"DNS 解析失败或负载均衡异常导致服务不可用时如何排查？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[14],"note":"扩展样本：网络故障"}
+{"id":"svc-exp-014","query":"服务不可用第一分钟内如何确认故障并启动应急？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[16],"note":"扩展样本：第一时间处理"}
+{"id":"svc-exp-015","query":"服务不可用 5 分钟内应该如何快速定位并决策？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[17],"note":"扩展样本：5分钟内处理"}
+{"id":"svc-exp-016","query":"服务不可用 15 分钟内的恢复和验证动作有哪些？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[18],"note":"扩展样本：15分钟处理"}
+{"id":"svc-exp-017","query":"服务恢复后如何通过健康检查和错误率验证？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[20],"note":"扩展样本：验证步骤"}
+{"id":"svc-exp-018","query":"如何通过高可用架构和监控预防服务不可用？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[21],"note":"扩展样本：预防措施"}
+{"id":"svc-exp-019","query":"服务不可用恢复后复盘应该记录哪些内容？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[22],"note":"扩展样本：故障复盘"}
+{"id":"svc-exp-020","query":"服务不可用超过 15 分钟应该升级给谁？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[25],"note":"扩展样本：升级机制"}
+
+{"id":"slow-exp-001","query":"SlowResponse 告警的 P99 触发条件是什么？","expectedSource":"slow_response.md","expectedChunkIndexes":[1],"note":"扩展样本：慢响应告警条件"}
+{"id":"slow-exp-002","query":"P99 响应时间持续超过 3 秒是什么告警？","expectedSource":"slow_response.md","expectedChunkIndexes":[1],"note":"扩展样本：触发条件反查"}
+{"id":"slow-exp-003","query":"响应时间过长为什么会造成请求堆积和超时错误？","expectedSource":"slow_response.md","expectedChunkIndexes":[2],"note":"扩展样本：问题描述"}
+{"id":"slow-exp-004","query":"慢响应排查第一步为什么要确定告警时间？","expectedSource":"slow_response.md","expectedChunkIndexes":[4],"note":"扩展样本：步骤1"}
+{"id":"slow-exp-005","query":"慢响应时 application-logs 应该查询哪些性能日志？","expectedSource":"slow_response.md","expectedChunkIndexes":[5],"note":"扩展样本：应用性能日志"}
+{"id":"slow-exp-006","query":"慢响应怀疑数据库问题时应该查询哪个日志主题？","expectedSource":"slow_response.md","expectedChunkIndexes":[6],"note":"扩展样本：数据库慢查询日志"}
+{"id":"slow-exp-007","query":"慢响应排查时如何查看 CPU、内存和磁盘 IO 等系统资源？","expectedSource":"slow_response.md","expectedChunkIndexes":[7],"note":"扩展样本：系统资源"}
+{"id":"slow-exp-008","query":"慢查询日志大量出现时，如何优化 SQL？","expectedSource":"slow_response.md","expectedChunkIndexes":[9],"note":"扩展样本：数据库慢查询"}
+{"id":"slow-exp-009","query":"第三方 API 调用慢导致接口延迟时应该调整什么？","expectedSource":"slow_response.md","expectedChunkIndexes":[10],"note":"扩展样本：外部 API 超时"}
+{"id":"slow-exp-010","query":"如果是代码路径执行慢或慢方法导致响应慢，怎么定位？","expectedSource":"slow_response.md","expectedChunkIndexes":[11],"note":"扩展样本：代码性能问题"}
+{"id":"slow-exp-011","query":"缓存命中率下降导致数据库查询激增时如何处理？","expectedSource":"slow_response.md","expectedChunkIndexes":[12],"note":"扩展样本：缓存失效"}
+{"id":"slow-exp-012","query":"系统资源不足导致慢响应时应该如何扩容？","expectedSource":"slow_response.md","expectedChunkIndexes":[13],"note":"扩展样本：系统资源不足"}
+{"id":"slow-exp-013","query":"跨地域调用延迟和网络丢包导致慢响应时怎么优化？","expectedSource":"slow_response.md","expectedChunkIndexes":[14],"note":"扩展样本：网络问题"}
+{"id":"slow-exp-014","query":"慢响应 5 分钟内可以采取哪些扩容、限流和降级动作？","expectedSource":"slow_response.md","expectedChunkIndexes":[16],"note":"扩展样本：立即操作"}
+{"id":"slow-exp-015","query":"慢响应 30 分钟内怎么通过日志定位根因并临时优化？","expectedSource":"slow_response.md","expectedChunkIndexes":[17],"note":"扩展样本：短期措施"}
+{"id":"slow-exp-016","query":"长期治理慢响应需要做哪些代码和架构优化？","expectedSource":"slow_response.md","expectedChunkIndexes":[18],"note":"扩展样本：长期优化"}
+{"id":"slow-exp-017","query":"处理慢响应后如何验证 P99 和错误率恢复正常？","expectedSource":"slow_response.md","expectedChunkIndexes":[19],"note":"扩展样本：验证步骤"}
+{"id":"slow-exp-018","query":"慢响应优化清单里需要检查索引、缓存和超时吗？","expectedSource":"slow_response.md","expectedChunkIndexes":[20],"note":"扩展样本：优化检查清单"}
+{"id":"slow-exp-019","query":"排查慢响应要关注哪些监控指标，比如 P99 和 QPS？","expectedSource":"slow_response.md","expectedChunkIndexes":[21],"note":"扩展样本：相关监控指标"}
+{"id":"slow-exp-020","query":"慢响应可能和哪些 CPU、内存、数据库或错误率告警有关？","expectedSource":"slow_response.md","expectedChunkIndexes":[22],"note":"扩展样本：相关告警"}

@@ -1,0 +1,29 @@
+{"id":"cpu-001","query":"CPU使用率过高会导致哪些问题？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[2],"note":"命中问题描述章节"}
+{"id":"cpu-002","query":"CPU告警时第二步应该查什么日志？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[5],"note":"命中步骤2: 查询系统日志"}
+{"id":"cpu-003","query":"CPU高的时候怎么分析高消耗进程？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[6],"note":"命中步骤3: 分析CPU消耗进程"}
+{"id":"cpu-004","query":"如果CPU高是数据库查询慢导致的怎么办？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[12],"note":"命中原因4: 数据库查询慢"}
+{"id":"cpu-005","query":"CPU使用率过高时5分钟内应该立即做什么？","expectedSource":"cpu_high_usage.md","expectedChunkIndexes":[14],"note":"命中立即操作（5分钟内）"}
+
+{"id":"disk-001","query":"磁盘使用率过高一般会带来什么影响？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[2],"note":"命中问题描述章节"}
+{"id":"disk-002","query":"磁盘告警时第二步应该查询什么信息？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[5],"note":"命中步骤2: 查询系统磁盘使用情况"}
+{"id":"disk-003","query":"磁盘空间不足时怎么分析到底是谁占用了空间？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[7],"note":"命中步骤4: 分析磁盘占用"}
+{"id":"disk-004","query":"如果怀疑是日志文件太大导致磁盘告警，应该看哪部分文档？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[9],"note":"命中原因1: 日志文件过大"}
+{"id":"disk-005","query":"磁盘满了想找大文件，用什么命令？","expectedSource":"disk_high_usage.md","expectedChunkIndexes":[23],"note":"命中查找大文件"}
+
+{"id":"memory-001","query":"内存使用率过高通常会有什么问题？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[2],"note":"命中问题描述章节"}
+{"id":"memory-002","query":"内存告警时第二步应该看什么监控日志？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[5],"note":"命中步骤2: 查询系统监控日志"}
+{"id":"memory-003","query":"怎么进一步分析内存使用情况？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[7],"note":"命中步骤4: 分析内存使用情况"}
+{"id":"memory-004","query":"如果怀疑是内存泄漏导致内存过高，应该看哪部分？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[9],"note":"命中原因1: 内存泄漏"}
+{"id":"memory-005","query":"排查JVM内存问题时怎么查看JVM内存使用？","expectedSource":"memory_high_usage.md","expectedChunkIndexes":[21],"note":"命中查看JVM内存使用"}
+
+{"id":"svc-001","query":"服务不可用通常会造成什么影响？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[2],"note":"命中问题描述章节"}
+{"id":"svc-002","query":"服务不可用告警时应该查询哪类服务状态日志？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[5],"note":"命中步骤2: 查询服务状态日志"}
+{"id":"svc-003","query":"如果怀疑容器重启或者OOM，应该查什么系统事件日志？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[6],"note":"命中步骤3: 查询系统事件日志"}
+{"id":"svc-004","query":"服务不可用如果是数据库连不上，该看哪部分处理方案？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[10],"note":"命中原因2: 数据库连接失败"}
+{"id":"svc-005","query":"服务不可用发生后第一时间1分钟内应该做什么？","expectedSource":"service_unavailable.md","expectedChunkIndexes":[16],"note":"命中第一时间（1分钟内）"}
+
+{"id":"slow-001","query":"服务响应时间过长一般会有什么表现？","expectedSource":"slow_response.md","expectedChunkIndexes":[2],"note":"命中问题描述章节"}
+{"id":"slow-002","query":"响应时间过长时应该先查询哪类应用性能日志？","expectedSource":"slow_response.md","expectedChunkIndexes":[5],"note":"命中步骤2: 查询应用性能日志"}
+{"id":"slow-003","query":"慢响应告警时怎么查数据库慢查询日志？","expectedSource":"slow_response.md","expectedChunkIndexes":[6],"note":"命中步骤3: 查询数据库慢查询日志"}
+{"id":"slow-004","query":"如果慢响应是外部API调用超时导致的，应该看哪部分？","expectedSource":"slow_response.md","expectedChunkIndexes":[10],"note":"命中原因2: 外部API调用超时"}
+{"id":"slow-005","query":"慢响应问题有哪些性能优化检查项？","expectedSource":"slow_response.md","expectedChunkIndexes":[20],"note":"命中性能优化检查清单"}
