@@ -47,7 +47,7 @@ spring:
           connections:
             tencent-cls:
               url: https://mcp-api.tencent-cloud.com
-              sse-endpoint: ${TENCENT_MCP_SSE_ENDPOINT:/sse/your-sse-endpoint}  # 上传到 GitHub 前请使用环境变量注入真实值
+              sse-endpoint: ${TENCENT_MCP_SSE_ENDPOINT:/sse/your-endpoint-id}  # 上传到 GitHub 前请使用环境变量注入真实值
 
 # 阿里云 DashScope Embedding API 配置
 dashscope:
@@ -64,8 +64,17 @@ document:
 
 # RAG 配置
 rag:
-  top-k: 3  # 检索返回的最相似文档数量
   model: "qwen3-max"  # 大语言模型名称
+  recall-top-n: 10  # 粗召回候选数，Milvus/BM25 都按这个数量检索
+  final-top-k: 3  # 最终进入 prompt 的文档数
+  rrf-k: 60  # RRF 融合参数
+  bm25:
+    enabled: true
+    index-path: ./data/lucene-index
+  rerank:
+    enabled: false  # 本地未部署 bge-rerank-base 时先关闭
+    endpoint: http://localhost:8001/rerank
+    timeout-ms: 10000
 
 # Prometheus 配置
 prometheus:
@@ -76,3 +85,27 @@ prometheus:
 # CLS 云日志服务配置
 cls:
   mock-enabled: false  # 是否启用 Mock 模式（用于测试，设为 true 返回与告警关联的模拟日志数据）
+
+tool:
+  resilience:
+    prometheus:
+      enabled: true
+      max-attempts: 2
+      initial-backoff-ms: 300
+      max-backoff-ms: 1000
+      failure-threshold: 3
+      open-duration-ms: 15000
+    logs:
+      enabled: true
+      max-attempts: 2
+      initial-backoff-ms: 300
+      max-backoff-ms: 1000
+      failure-threshold: 3
+      open-duration-ms: 15000
+    reranker:
+      enabled: true
+      max-attempts: 2
+      initial-backoff-ms: 300
+      max-backoff-ms: 1000
+      failure-threshold: 3
+      open-duration-ms: 15000

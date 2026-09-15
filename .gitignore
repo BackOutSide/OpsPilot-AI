@@ -63,3 +63,12 @@ uploads/
 
 ### Temporary Workspace Folders ###
 /.remote-history/
+
+### Python Runtime and Cache ###
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+### Generated Search Index ###
+/data/lucene-index/

@@ -8,14 +8,25 @@ import java.util.List;
  */
 public class ChunkEvalResult {
 
+    private String mode;
     private String sampleId;
     private String query;
     private String expectedSource;
     private List<Integer> expectedChunkIndexes = new ArrayList<>();
     private List<String> retrievedChunkKeys = new ArrayList<>();
+    private List<String> recallChunkKeys = new ArrayList<>();
     private boolean hitAt1;
     private boolean hitAt3;
+    private boolean recallAt10;
     private int firstHitRank = -1;
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
 
     public String getSampleId() {
         return sampleId;
@@ -57,6 +68,14 @@ public class ChunkEvalResult {
         this.retrievedChunkKeys = retrievedChunkKeys;
     }
 
+    public List<String> getRecallChunkKeys() {
+        return recallChunkKeys;
+    }
+
+    public void setRecallChunkKeys(List<String> recallChunkKeys) {
+        this.recallChunkKeys = recallChunkKeys;
+    }
+
     public boolean isHitAt1() {
         return hitAt1;
     }
@@ -71,6 +90,14 @@ public class ChunkEvalResult {
 
     public void setHitAt3(boolean hitAt3) {
         this.hitAt3 = hitAt3;
+    }
+
+    public boolean isRecallAt10() {
+        return recallAt10;
+    }
+
+    public void setRecallAt10(boolean recallAt10) {
+        this.recallAt10 = recallAt10;
     }
 
     public int getFirstHitRank() {

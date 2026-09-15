@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +58,20 @@ public class RagService {
     private String model;
 
     private Generation generation;
+
+    public enum RetrievalMode {
+        DENSE_ONLY,
+        BM25_ONLY,
+        HYBRID_RRF,
+        HYBRID_RRF_RERANK
+    }
+
+    public record RetrievalDebugResult(
+            RetrievalMode mode,
+            List<RetrievedChunk> finalChunks,
+            List<RetrievedChunk> recallChunks
+    ) {
+    }
 
     @PostConstruct
     public void init() {
@@ -152,17 +167,83 @@ public class RagService {
         int recallTopN = ragRetrievalProperties.getRecallTopN();
         int finalTopK = ragRetrievalProperties.getFinalTopK();
 
-        List<RetrievedChunk> denseHits = vectorSearchService.searchSimilarChunks(question, recallTopN);
-        List<LuceneBm25Service.Bm25Hit> bm25Hits = luceneBm25Service.search(question, recallTopN);
+        List<RetrievedChunk> denseHits = safeDenseRetrieve(question, recallTopN);
+        List<LuceneBm25Service.Bm25Hit> bm25Hits = safeBm25Retrieve(question, recallTopN);
 
-        List<RetrievedChunk> fused = rrfFusionService.fuse(denseHits, bm25Hits);
-        List<RetrievedChunk> reranked = bgeRerankClient.rerank(question, fused, finalTopK);
+        List<RetrievedChunk> fused = fuseWithFallback(denseHits, bm25Hits);
+        List<RetrievedChunk> reranked = safeRerank(question, fused, finalTopK * 2);
 
         reranked.sort(resolveFinalComparator());
+        List<RetrievedChunk> finalResults = deduplicateAndLimit(reranked, finalTopK);
 
         logger.info("混合检索完成: dense={}, bm25={}, fused={}, final={}",
-                denseHits.size(), bm25Hits.size(), fused.size(), reranked.size());
-        return reranked;
+                denseHits.size(), bm25Hits.size(), fused.size(), finalResults.size());
+        return finalResults;
+    }
+
+    private List<RetrievedChunk> safeDenseRetrieve(String question, int recallTopN) {
+        try {
+            return vectorSearchService.searchSimilarChunks(question, recallTopN);
+        } catch (Exception e) {
+            logger.warn("Dense retrieval 失败，降级为无 dense 候选: {}", e.getMessage());
+            return List.of();
+        }
+    }
+
+    private List<LuceneBm25Service.Bm25Hit> safeBm25Retrieve(String question, int recallTopN) {
+        try {
+            return luceneBm25Service.search(question, recallTopN);
+        } catch (Exception e) {
+            logger.warn("BM25 retrieval 失败，降级为无 sparse 候选: {}", e.getMessage());
+            return List.of();
+        }
+    }
+
+    private List<RetrievedChunk> fuseWithFallback(List<RetrievedChunk> denseHits,
+                                                  List<LuceneBm25Service.Bm25Hit> bm25Hits) {
+        if (!denseHits.isEmpty() || !bm25Hits.isEmpty()) {
+            try {
+                return rrfFusionService.fuse(denseHits, bm25Hits);
+            } catch (Exception e) {
+                logger.warn("RRF 融合失败，按单路候选回退: {}", e.getMessage());
+            }
+        }
+
+        if (!denseHits.isEmpty()) {
+            return new ArrayList<>(denseHits);
+        }
+
+        if (!bm25Hits.isEmpty()) {
+            List<RetrievedChunk> sparseOnly = new ArrayList<>();
+            for (LuceneBm25Service.Bm25Hit hit : bm25Hits) {
+                RetrievedChunk chunk = new RetrievedChunk();
+                chunk.setChunkId(hit.getChunkId());
+                chunk.setSource(hit.getSource());
+                chunk.setTitle(hit.getTitle());
+                chunk.setContent(hit.getContent());
+                chunk.setChunkIndex(hit.getChunkIndex());
+                chunk.setBm25Score(hit.getScore());
+                chunk.setFusionScore(hit.getScore());
+                sparseOnly.add(chunk);
+            }
+            return sparseOnly;
+        }
+
+        return List.of();
+    }
+
+    private List<RetrievedChunk> safeRerank(String question, List<RetrievedChunk> fused, int finalTopK) {
+        try {
+            return bgeRerankClient.rerank(question, fused, finalTopK);
+        } catch (Exception e) {
+            logger.warn("Rerank 失败，降级为融合结果排序: {}", e.getMessage());
+            List<RetrievedChunk> fallback = new ArrayList<>(fused);
+            fallback.sort(Comparator.comparingDouble(RetrievedChunk::getFusionScore).reversed());
+            if (fallback.size() > finalTopK) {
+                return new ArrayList<>(fallback.subList(0, finalTopK));
+            }
+            return fallback;
+        }
     }
 
     /**
@@ -171,6 +252,80 @@ public class RagService {
      */
     public List<RetrievedChunk> retrieveForDebug(String question) {
         return retrieveRelevantChunks(question);
+    }
+
+    public RetrievalDebugResult retrieveForDebug(String question, RetrievalMode mode) {
+        int recallTopN = ragRetrievalProperties.getRecallTopN();
+        int finalTopK = ragRetrievalProperties.getFinalTopK();
+
+        return switch (mode) {
+            case DENSE_ONLY -> {
+                List<RetrievedChunk> denseHits = safeDenseRetrieve(question, recallTopN);
+                yield new RetrievalDebugResult(
+                        mode,
+                        deduplicateAndLimit(denseHits, finalTopK),
+                        deduplicateAndLimit(denseHits, recallTopN)
+                );
+            }
+            case BM25_ONLY -> {
+                List<RetrievedChunk> bm25Chunks = convertBm25Hits(safeBm25Retrieve(question, recallTopN));
+                yield new RetrievalDebugResult(
+                        mode,
+                        deduplicateAndLimit(bm25Chunks, finalTopK),
+                        deduplicateAndLimit(bm25Chunks, recallTopN)
+                );
+            }
+            case HYBRID_RRF -> {
+                List<RetrievedChunk> denseHits = safeDenseRetrieve(question, recallTopN);
+                List<LuceneBm25Service.Bm25Hit> bm25Hits = safeBm25Retrieve(question, recallTopN);
+                List<RetrievedChunk> fused = fuseWithFallback(denseHits, bm25Hits);
+                yield new RetrievalDebugResult(
+                        mode,
+                        deduplicateAndLimit(fused, finalTopK),
+                        deduplicateAndLimit(fused, recallTopN)
+                );
+            }
+            case HYBRID_RRF_RERANK -> {
+                List<RetrievedChunk> denseHits = safeDenseRetrieve(question, recallTopN);
+                List<LuceneBm25Service.Bm25Hit> bm25Hits = safeBm25Retrieve(question, recallTopN);
+                List<RetrievedChunk> fused = fuseWithFallback(denseHits, bm25Hits);
+                List<RetrievedChunk> reranked = safeRerank(question, fused, finalTopK * 2);
+                reranked.sort(resolveFinalComparator());
+                yield new RetrievalDebugResult(
+                        mode,
+                        deduplicateAndLimit(reranked, finalTopK),
+                        deduplicateAndLimit(fused, recallTopN)
+                );
+            }
+        };
+    }
+
+    private List<RetrievedChunk> deduplicateAndLimit(List<RetrievedChunk> chunks, int limit) {
+        Map<String, RetrievedChunk> uniqueChunks = new LinkedHashMap<>();
+        for (RetrievedChunk chunk : chunks) {
+            String key = chunk.getSource() + "#" + chunk.getChunkIndex();
+            uniqueChunks.putIfAbsent(key, chunk);
+            if (uniqueChunks.size() >= limit) {
+                break;
+            }
+        }
+        return new ArrayList<>(uniqueChunks.values());
+    }
+
+    private List<RetrievedChunk> convertBm25Hits(List<LuceneBm25Service.Bm25Hit> bm25Hits) {
+        List<RetrievedChunk> chunks = new ArrayList<>();
+        for (LuceneBm25Service.Bm25Hit hit : bm25Hits) {
+            RetrievedChunk chunk = new RetrievedChunk();
+            chunk.setChunkId(hit.getChunkId());
+            chunk.setSource(hit.getSource());
+            chunk.setTitle(hit.getTitle());
+            chunk.setContent(hit.getContent());
+            chunk.setChunkIndex(hit.getChunkIndex());
+            chunk.setBm25Score(hit.getScore());
+            chunk.setFusionScore(hit.getScore());
+            chunks.add(chunk);
+        }
+        return chunks;
     }
 
     private Comparator<RetrievedChunk> resolveFinalComparator() {

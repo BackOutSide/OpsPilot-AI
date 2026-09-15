@@ -12,10 +12,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.service.AiOpsService;
 import org.example.service.ChatService;
+import org.example.service.ConversationCompressionService;
+import org.example.service.tooling.ToolAccessContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ai.tool.ToolCallback;
-import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +37,6 @@ import java.util.concurrent.locks.ReentrantLock;
 @RestController
 @RequestMapping("/api")
 public class ChatController {
-
     private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
 
     @Autowired
@@ -47,7 +46,7 @@ public class ChatController {
     private ChatService chatService;
 
     @Autowired
-    private ToolCallbackProvider tools;
+    private ConversationCompressionService conversationCompressionService;
 
     private final ExecutorService executor = Executors.newCachedThreadPool();
 
@@ -78,21 +77,22 @@ public class ChatController {
             // 获取历史消息
             List<Map<String, String>> history = session.getHistory();
             logger.info("会话历史消息对数: {}", history.size() / 2);
+            ToolAccessContext toolAccessContext = ToolAccessContext.forChat(session.getSessionId());
 
             // 创建 DashScope API 和 ChatModel
             DashScopeApi dashScopeApi = chatService.createDashScopeApi();
             DashScopeChatModel chatModel = chatService.createStandardChatModel(dashScopeApi);
 
             // 记录可用工具
-            chatService.logAvailableTools();
+            chatService.logAvailableTools(toolAccessContext);
 
             logger.info("开始 ReactAgent 对话（支持自动工具调用）");
             
             // 构建系统提示词（包含历史消息）
-            String systemPrompt = chatService.buildSystemPrompt(history);
+            String systemPrompt = chatService.buildSystemPrompt(history, session.getRollingSummary());
             
             // 创建 ReactAgent
-            ReactAgent agent = chatService.createReactAgent(chatModel, systemPrompt);
+            ReactAgent agent = chatService.createReactAgent(chatModel, systemPrompt, toolAccessContext);
             
             // 执行对话
             String fullAnswer = chatService.executeChat(agent, request.getQuestion());
@@ -166,21 +166,22 @@ public class ChatController {
                 // 获取历史消息
                 List<Map<String, String>> history = session.getHistory();
                 logger.info("ReactAgent 会话历史消息对数: {}", history.size() / 2);
+                ToolAccessContext toolAccessContext = ToolAccessContext.forChat(session.getSessionId());
 
                 // 创建 DashScope API 和 ChatModel
                 DashScopeApi dashScopeApi = chatService.createDashScopeApi();
                 DashScopeChatModel chatModel = chatService.createStandardChatModel(dashScopeApi);
 
                 // 记录可用工具
-                chatService.logAvailableTools();
+                chatService.logAvailableTools(toolAccessContext);
 
                 logger.info("开始 ReactAgent 流式对话（支持自动工具调用）");
                 
                 // 构建系统提示词（包含历史消息）
-                String systemPrompt = chatService.buildSystemPrompt(history);
+                String systemPrompt = chatService.buildSystemPrompt(history, session.getRollingSummary());
                 
                 // 创建 ReactAgent
-                ReactAgent agent = chatService.createReactAgent(chatModel, systemPrompt);
+                ReactAgent agent = chatService.createReactAgent(chatModel, systemPrompt, toolAccessContext);
                 
                 // 用于累积完整答案
                 StringBuilder fullAnswerBuilder = new StringBuilder();
@@ -300,12 +301,13 @@ public class ChatController {
                                 .build())
                         .build();
 
-                ToolCallback[] toolCallbacks = tools.getToolCallbacks();
-
                 emitter.send(SseEmitter.event().name("message").data(SseMessage.content("正在读取告警并拆解任务...\n")));
                 
                 // 调用 AiOpsService 执行分析流程
-                Optional<OverAllState> overAllStateOptional = aiOpsService.executeAiOpsAnalysis(chatModel, toolCallbacks);
+                Optional<OverAllState> overAllStateOptional = aiOpsService.executeAiOpsAnalysis(
+                        chatModel,
+                        ToolAccessContext.forAiOps()
+                );
 
                 if (overAllStateOptional.isEmpty()) {
                     emitter.send(SseEmitter.event().name("message")
@@ -404,7 +406,7 @@ public class ChatController {
         if (sessionId == null || sessionId.isEmpty()) {
             sessionId = UUID.randomUUID().toString();
         }
-        return sessions.computeIfAbsent(sessionId, SessionInfo::new);
+        return sessions.computeIfAbsent(sessionId, id -> new SessionInfo(id, conversationCompressionService));
     }
 
     // ==================== 内部类 ====================
@@ -419,12 +421,22 @@ public class ChatController {
         private final List<Map<String, String>> messageHistory;
         private final long createTime;
         private final ReentrantLock lock;
+        private final ConversationCompressionService conversationCompressionService;
+        private String rollingSummary;
+        private int compressedPairCount;
 
-        public SessionInfo(String sessionId) {
+        public SessionInfo(String sessionId, ConversationCompressionService conversationCompressionService) {
             this.sessionId = sessionId;
             this.messageHistory = new ArrayList<>();
             this.createTime = System.currentTimeMillis();
             this.lock = new ReentrantLock();
+            this.conversationCompressionService = conversationCompressionService;
+            this.rollingSummary = "";
+            this.compressedPairCount = 0;
+        }
+
+        public String getSessionId() {
+            return sessionId;
         }
 
         /**
@@ -446,16 +458,7 @@ public class ChatController {
                 assistantMsg.put("content", aiAnswer);
                 messageHistory.add(assistantMsg);
 
-                // 自动清理：保持最多 MAX_WINDOW_SIZE 对消息
-                // 每对消息包含2条记录（user + assistant）
-                int maxMessages = MAX_WINDOW_SIZE * 2;
-                while (messageHistory.size() > maxMessages) {
-                    // 成对删除最旧的消息（删除前2条）
-                    messageHistory.remove(0); // 删除最旧的用户消息
-                    if (!messageHistory.isEmpty()) {
-                        messageHistory.remove(0); // 删除对应的AI回复
-                    }
-                }
+                compressHistoryIfNeeded();
 
                 logger.debug("会话 {} 更新历史消息，当前消息对数: {}", 
                     sessionId, messageHistory.size() / 2);
@@ -485,6 +488,8 @@ public class ChatController {
             lock.lock();
             try {
                 messageHistory.clear();
+                rollingSummary = "";
+                compressedPairCount = 0;
                 logger.info("会话 {} 历史消息已清空", sessionId);
             } finally {
                 lock.unlock();
@@ -497,9 +502,42 @@ public class ChatController {
         public int getMessagePairCount() {
             lock.lock();
             try {
-                return messageHistory.size() / 2;
+                return compressedPairCount + (messageHistory.size() / 2);
             } finally {
                 lock.unlock();
+            }
+        }
+
+        public String getRollingSummary() {
+            lock.lock();
+            try {
+                return rollingSummary;
+            } finally {
+                lock.unlock();
+            }
+        }
+
+        private void compressHistoryIfNeeded() {
+            ConversationCompressionService.CompressionResult compressionResult =
+                    conversationCompressionService.compress(messageHistory, rollingSummary);
+            if (!compressionResult.compressed()) {
+                trimRecentWindowFallback();
+                return;
+            }
+
+            rollingSummary = compressionResult.summary();
+            compressedPairCount += compressionResult.compressedPairs();
+            messageHistory.clear();
+            messageHistory.addAll(compressionResult.recentMessages());
+        }
+
+        private void trimRecentWindowFallback() {
+            int maxMessages = MAX_WINDOW_SIZE * 2;
+            while (messageHistory.size() > maxMessages) {
+                messageHistory.remove(0);
+                if (!messageHistory.isEmpty()) {
+                    messageHistory.remove(0);
+                }
             }
         }
     }

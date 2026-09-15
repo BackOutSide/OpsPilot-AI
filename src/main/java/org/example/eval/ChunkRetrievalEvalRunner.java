@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -38,6 +39,8 @@ public class ChunkRetrievalEvalRunner {
                 .web(WebApplicationType.NONE)
                 .properties(Map.of(
                         "spring.ai.mcp.client.enabled", "false",
+                        "spring.autoconfigure.exclude",
+                        "org.springframework.ai.mcp.client.common.autoconfigure.McpToolCallbackAutoConfiguration",
                         "spring.main.banner-mode", "off"
                 ))
                 .run();
@@ -69,36 +72,18 @@ public class ChunkRetrievalEvalRunner {
                 throw new IllegalStateException("No evaluation samples found in " + samplesFile);
             }
 
-            List<ChunkEvalResult> results = new ArrayList<>();
-            int hitAt1 = 0;
-            int hitAt3 = 0;
-            double mrr = 0.0d;
-
-            for (ChunkEvalSample sample : samples) {
-                ChunkEvalResult result = evaluateSample(sample, ragService);
-                results.add(result);
-
-                if (result.isHitAt1()) {
-                    hitAt1++;
-                }
-                if (result.isHitAt3()) {
-                    hitAt3++;
-                }
-                if (result.getFirstHitRank() > 0) {
-                    mrr += 1.0d / result.getFirstHitRank();
-                }
+            Files.createDirectories(resultsFile.getParent());
+            List<EvalSummary> summaries = new ArrayList<>();
+            for (RagService.RetrievalMode mode : evalArguments.modes()) {
+                Path detailFile = detailFileFor(resultsFile, mode);
+                summaries.add(evaluateMode(samples, ragService, mode, detailFile));
             }
 
-            Files.createDirectories(resultsFile.getParent());
-            OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValue(resultsFile.toFile(), results);
+            OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValue(resultsFile.toFile(), summaries);
 
-            double total = samples.size();
-            System.out.println("========== Chunk Evaluation Summary ==========");
-            System.out.printf(Locale.ROOT, "Samples: %d%n", samples.size());
-            System.out.printf(Locale.ROOT, "Hit@1: %.4f%n", hitAt1 / total);
-            System.out.printf(Locale.ROOT, "Hit@3: %.4f%n", hitAt3 / total);
-            System.out.printf(Locale.ROOT, "MRR@3: %.4f%n", mrr / total);
-            System.out.printf(Locale.ROOT, "Results file: %s%n", resultsFile);
+            printOverallTable(summaries);
+            printCategoryTable(summaries);
+            System.out.printf(Locale.ROOT, "Summary file: %s%n", resultsFile);
         } finally {
             context.close();
         }
@@ -123,16 +108,74 @@ public class ChunkRetrievalEvalRunner {
         return samples;
     }
 
-    private static ChunkEvalResult evaluateSample(ChunkEvalSample sample, RagService ragService) {
-        List<RetrievedChunk> retrievedChunks = ragService.retrieveForDebug(sample.getQuery());
+    private static EvalSummary evaluateMode(List<ChunkEvalSample> samples,
+                                            RagService ragService,
+                                            RagService.RetrievalMode mode,
+                                            Path detailFile) throws IOException {
+        List<ChunkEvalResult> results = new ArrayList<>();
+        EvalSummary summary = new EvalSummary();
+        summary.mode = mode.name();
+        summary.samples = samples.size();
+
+        for (ChunkEvalSample sample : samples) {
+            ChunkEvalResult result = evaluateSample(sample, ragService, mode);
+            results.add(result);
+
+            if (result.isHitAt1()) {
+                summary.hitAt1Count++;
+            }
+            if (result.isHitAt3()) {
+                summary.hitAt3Count++;
+                summary.firstHitRankSum += result.getFirstHitRank();
+            }
+            if (result.isRecallAt10()) {
+                summary.recallAt10Count++;
+            }
+            if (result.getFirstHitRank() > 0) {
+                summary.mrrAt3Sum += 1.0d / result.getFirstHitRank();
+            }
+
+            String category = categoryOf(sample.getId());
+            CategorySummary categorySummary = summary.categoryHitAt3.computeIfAbsent(category, ignored -> new CategorySummary());
+            categorySummary.samples++;
+            if (result.isHitAt3()) {
+                categorySummary.hitAt3Count++;
+            }
+        }
+
+        summary.noHitCount = summary.samples - summary.hitAt3Count;
+        summary.hitAt1 = ratio(summary.hitAt1Count, summary.samples);
+        summary.hitAt3 = ratio(summary.hitAt3Count, summary.samples);
+        summary.recallAt10 = ratio(summary.recallAt10Count, summary.samples);
+        summary.mrrAt3 = summary.samples == 0 ? 0.0d : summary.mrrAt3Sum / summary.samples;
+        summary.avgFirstHitRank = summary.hitAt3Count == 0 ? 0.0d : summary.firstHitRankSum / summary.hitAt3Count;
+        summary.detailFile = detailFile.toString();
+        summary.categoryHitAt3.values().forEach(CategorySummary::finish);
+
+        OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValue(detailFile.toFile(), results);
+        return summary;
+    }
+
+    private static ChunkEvalResult evaluateSample(ChunkEvalSample sample,
+                                                  RagService ragService,
+                                                  RagService.RetrievalMode mode) {
+        RagService.RetrievalDebugResult debugResult = ragService.retrieveForDebug(sample.getQuery(), mode);
+        List<RetrievedChunk> retrievedChunks = debugResult.finalChunks();
+        List<RetrievedChunk> recallChunks = debugResult.recallChunks();
 
         ChunkEvalResult result = new ChunkEvalResult();
+        result.setMode(mode.name());
         result.setSampleId(sample.getId());
         result.setQuery(sample.getQuery());
         result.setExpectedSource(sample.getExpectedSource());
         result.setExpectedChunkIndexes(sample.getExpectedChunkIndexes());
         result.setRetrievedChunkKeys(
                 retrievedChunks.stream()
+                        .map(ChunkRetrievalEvalRunner::chunkKey)
+                        .collect(Collectors.toList())
+        );
+        result.setRecallChunkKeys(
+                recallChunks.stream()
                         .map(ChunkRetrievalEvalRunner::chunkKey)
                         .collect(Collectors.toList())
         );
@@ -149,6 +192,7 @@ public class ChunkRetrievalEvalRunner {
         result.setFirstHitRank(firstHitRank);
         result.setHitAt1(firstHitRank == 1);
         result.setHitAt3(firstHitRank > 0 && firstHitRank <= 3);
+        result.setRecallAt10(recallChunks.stream().anyMatch(chunk -> isExpectedChunk(chunk, sample)));
         return result;
     }
 
@@ -173,12 +217,99 @@ public class ChunkRetrievalEvalRunner {
         return fileName == null ? source : fileName.toString();
     }
 
+    private static Path detailFileFor(Path resultsFile, RagService.RetrievalMode mode) {
+        String fileName = "chunk_eval_results_" + mode.name().toLowerCase(Locale.ROOT) + ".json";
+        Path parent = resultsFile.getParent();
+        return parent == null ? Paths.get(fileName) : parent.resolve(fileName);
+    }
+
+    private static String categoryOf(String sampleId) {
+        if (sampleId == null) {
+            return "unknown";
+        }
+        int dashIndex = sampleId.indexOf('-');
+        return dashIndex <= 0 ? "unknown" : sampleId.substring(0, dashIndex);
+    }
+
+    private static double ratio(int numerator, int denominator) {
+        return denominator == 0 ? 0.0d : (double) numerator / denominator;
+    }
+
+    private static void printOverallTable(List<EvalSummary> summaries) {
+        System.out.println("========== Retrieval Ablation Summary ==========");
+        System.out.println("| Mode | Samples | Hit@1 | Hit@3 | Recall@10 | MRR@3 | AvgFirstHitRank | NoHit |");
+        System.out.println("|---|---:|---:|---:|---:|---:|---:|---:|");
+        for (EvalSummary summary : summaries) {
+            System.out.printf(Locale.ROOT,
+                    "| %s | %d | %.4f | %.4f | %.4f | %.4f | %.2f | %d |%n",
+                    summary.mode,
+                    summary.samples,
+                    summary.hitAt1,
+                    summary.hitAt3,
+                    summary.recallAt10,
+                    summary.mrrAt3,
+                    summary.avgFirstHitRank,
+                    summary.noHitCount);
+        }
+    }
+
+    private static void printCategoryTable(List<EvalSummary> summaries) {
+        System.out.println("========== Category Hit@3 ==========");
+        System.out.println("| Mode | cpu | disk | memory | svc | slow |");
+        System.out.println("|---|---:|---:|---:|---:|---:|");
+        for (EvalSummary summary : summaries) {
+            System.out.printf(Locale.ROOT,
+                    "| %s | %.4f | %.4f | %.4f | %.4f | %.4f |%n",
+                    summary.mode,
+                    categoryHit(summary, "cpu"),
+                    categoryHit(summary, "disk"),
+                    categoryHit(summary, "memory"),
+                    categoryHit(summary, "svc"),
+                    categoryHit(summary, "slow"));
+        }
+    }
+
+    private static double categoryHit(EvalSummary summary, String category) {
+        CategorySummary categorySummary = summary.categoryHitAt3.get(category);
+        return categorySummary == null ? 0.0d : categorySummary.hitAt3;
+    }
+
+    public static class EvalSummary {
+        public String mode;
+        public int samples;
+        public int hitAt1Count;
+        public int hitAt3Count;
+        public int recallAt10Count;
+        public int noHitCount;
+        public double hitAt1;
+        public double hitAt3;
+        public double recallAt10;
+        public double mrrAt3;
+        public double avgFirstHitRank;
+        public String detailFile;
+        public Map<String, CategorySummary> categoryHitAt3 = new LinkedHashMap<>();
+
+        private double mrrAt3Sum;
+        private double firstHitRankSum;
+    }
+
+    public static class CategorySummary {
+        public int samples;
+        public int hitAt3Count;
+        public double hitAt3;
+
+        private void finish() {
+            hitAt3 = ratio(hitAt3Count, samples);
+        }
+    }
+
     private static class EvalArguments {
         private String samplesFile = "eval/chunk_eval_samples.jsonl";
         private String docsDir = "aiops-docs";
         private String chunkCatalogFile = "eval/chunk_catalog.json";
-        private String resultsFile = "eval/chunk_eval_results.json";
+        private String resultsFile = "eval/chunk_eval_ablation_summary.json";
         private boolean reindex = true;
+        private String mode = "ALL";
 
         static EvalArguments parse(String[] args) {
             EvalArguments parsed = new EvalArguments();
@@ -193,9 +324,18 @@ public class ChunkRetrievalEvalRunner {
                     parsed.resultsFile = arg.substring("--results=".length());
                 } else if (arg.startsWith("--reindex=")) {
                     parsed.reindex = Boolean.parseBoolean(arg.substring("--reindex=".length()));
+                } else if (arg.startsWith("--mode=")) {
+                    parsed.mode = arg.substring("--mode=".length());
                 }
             });
             return parsed;
+        }
+
+        List<RagService.RetrievalMode> modes() {
+            if ("ALL".equalsIgnoreCase(mode)) {
+                return Arrays.asList(RagService.RetrievalMode.values());
+            }
+            return List.of(RagService.RetrievalMode.valueOf(mode));
         }
     }
 }

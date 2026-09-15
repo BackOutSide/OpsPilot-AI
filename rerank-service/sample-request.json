@@ -1,0 +1,8 @@
+{
+  "query": "payment-service CPU 飙高应该怎么排查？",
+  "documents": [
+    "payment-service CPU 使用率过高处理手册\n当 payment-service CPU 飙高时，先查看 Prometheus 指标，再定位热点线程。",
+    "payment-service Redis 超时排查\n当 payment-service 发生 Redis 连接超时，可以检查连接池和网络。"
+  ],
+  "top_n": 2
+}

@@ -3,10 +3,13 @@ package org.example.agent.tool;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+import org.example.config.ToolResilienceProperties;
+import org.example.service.resilience.ResilienceExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +40,12 @@ public class QueryLogsTools {
     
     @Value("${cls.mock-enabled:false}")
     private boolean mockEnabled;
+
+    @Autowired
+    private ToolResilienceProperties toolResilienceProperties;
+
+    @Autowired
+    private ResilienceExecutor resilienceExecutor;
     
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter
             .ofPattern("yyyy-MM-dd HH:mm:ss")
@@ -173,8 +182,14 @@ public class QueryLogsTools {
             List<LogEntry> logEntries;
             
             if (mockEnabled) {
-                // Mock 模式：返回与告警关联的模拟日志数据
-                logEntries = buildMockLogs(region, logTopic, safeQuery, actualLimit);
+                logEntries = resilienceExecutor.execute(
+                        "logs",
+                        toolResilienceProperties.getLogs(),
+                        () -> buildMockLogs(region, logTopic, safeQuery, actualLimit),
+                        ex -> {
+                            throw new RuntimeException("Log dependency failed: " + ex.getMessage(), ex);
+                        }
+                );
                 logger.info("使用 Mock 数据，返回 {} 条日志", logEntries.size());
             } else {
                 // 真实模式：调用 CLS API（这里预留接口，后续实现）
@@ -198,7 +213,7 @@ public class QueryLogsTools {
             
         } catch (Exception e) {
             logger.error("查询日志失败", e);
-            return buildErrorResponse("查询失败: " + e.getMessage());
+            return buildErrorResponse("查询失败（已尝试重试/降级）: " + e.getMessage());
         }
     }
 

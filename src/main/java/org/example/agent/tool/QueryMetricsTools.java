@@ -6,10 +6,13 @@ import lombok.Data;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.example.config.ToolResilienceProperties;
+import org.example.service.resilience.ResilienceExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -40,6 +43,12 @@ public class QueryMetricsTools {
     @Value("${prometheus.mock-enabled:false}")
     private boolean mockEnabled;
     
+    @Autowired
+    private ToolResilienceProperties toolResilienceProperties;
+
+    @Autowired
+    private ResilienceExecutor resilienceExecutor;
+
     private OkHttpClient httpClient;
     
     @jakarta.annotation.PostConstruct
@@ -70,7 +79,14 @@ public class QueryMetricsTools {
                 logger.info("使用 Mock 数据，返回 {} 个模拟告警", simplifiedAlerts.size());
             } else {
                 // 真实模式：调用 Prometheus Alerts API
-                PrometheusAlertsResult result = fetchPrometheusAlerts();
+                PrometheusAlertsResult result = resilienceExecutor.execute(
+                        "prometheus",
+                        toolResilienceProperties.getPrometheus(),
+                        this::fetchPrometheusAlerts,
+                        ex -> {
+                            throw new RuntimeException("Prometheus dependency failed: " + ex.getMessage(), ex);
+                        }
+                );
                 
                 if (!"success".equals(result.getStatus())) {
                     return buildErrorResponse("Prometheus API 返回非成功状态: " + result.getStatus(), result.getError());
@@ -115,7 +131,7 @@ public class QueryMetricsTools {
             
         } catch (Exception e) {
             logger.error("查询 Prometheus 告警失败", e);
-            return buildErrorResponse("查询失败", e.getMessage());
+            return buildErrorResponse("查询失败（已尝试重试/降级）", e.getMessage());
         }
     }
     

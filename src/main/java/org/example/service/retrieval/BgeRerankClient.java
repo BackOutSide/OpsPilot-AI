@@ -3,6 +3,8 @@ package org.example.service.retrieval;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.config.RagRetrievalProperties;
+import org.example.config.ToolResilienceProperties;
+import org.example.service.resilience.ResilienceExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.net.URI;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -26,9 +27,15 @@ public class BgeRerankClient {
     private static final Logger logger = LoggerFactory.getLogger(BgeRerankClient.class);
 
     private final RagRetrievalProperties ragRetrievalProperties;
+    private final ToolResilienceProperties toolResilienceProperties;
+    private final ResilienceExecutor resilienceExecutor;
 
-    public BgeRerankClient(RagRetrievalProperties ragRetrievalProperties) {
+    public BgeRerankClient(RagRetrievalProperties ragRetrievalProperties,
+                           ToolResilienceProperties toolResilienceProperties,
+                           ResilienceExecutor resilienceExecutor) {
         this.ragRetrievalProperties = ragRetrievalProperties;
+        this.toolResilienceProperties = toolResilienceProperties;
+        this.resilienceExecutor = resilienceExecutor;
     }
 
     public boolean isEnabled() {
@@ -42,51 +49,62 @@ public class BgeRerankClient {
         }
 
         try {
-            RestClient client = buildClient();
-            RerankRequest request = new RerankRequest();
-            request.setQuery(query);
-            request.setTopN(Math.min(topK, candidates.size()));
-
-            List<String> documents = new ArrayList<>();
-            for (RetrievedChunk candidate : candidates) {
-                String docText = candidate.getTitle() == null || candidate.getTitle().isBlank()
-                        ? candidate.getContent()
-                        : candidate.getTitle() + "\n" + candidate.getContent();
-                documents.add(docText);
-            }
-            request.setDocuments(documents);
-
-            RerankResponse response = client.post()
-                    .uri(URI.create(ragRetrievalProperties.getRerank().getEndpoint()))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(request)
-                    .retrieve()
-                    .body(RerankResponse.class);
-
-            if (response == null || response.getResults() == null || response.getResults().isEmpty()) {
-                logger.warn("bge-rerank-base 返回空结果，回退到 RRF 排序");
-                return fallback(candidates, topK);
-            }
-
-            List<RetrievedChunk> reranked = new ArrayList<>();
-            for (RerankItem item : response.getResults()) {
-                if (item.getIndex() < 0 || item.getIndex() >= candidates.size()) {
-                    continue;
-                }
-                RetrievedChunk chunk = candidates.get(item.getIndex());
-                chunk.setRerankScore(item.getScore());
-                reranked.add(chunk);
-            }
-
-            reranked.sort(Comparator.comparingDouble(RetrievedChunk::getRerankScore).reversed());
-            if (reranked.size() > topK) {
-                return new ArrayList<>(reranked.subList(0, topK));
-            }
-            return reranked;
+            return resilienceExecutor.execute(
+                    "reranker",
+                    toolResilienceProperties.getReranker(),
+                    () -> doRerank(query, candidates, topK),
+                    ex -> {
+                        logger.warn("调用 bge-rerank-base 失败，回退到 RRF 排序: {}", ex.getMessage());
+                        return fallback(candidates, topK);
+                    }
+            );
         } catch (Exception e) {
             logger.warn("调用 bge-rerank-base 失败，回退到 RRF 排序: {}", e.getMessage());
             return fallback(candidates, topK);
         }
+    }
+
+    private List<RetrievedChunk> doRerank(String query, List<RetrievedChunk> candidates, int topK) {
+        RestClient client = buildClient();
+        RerankRequest request = new RerankRequest();
+        request.setQuery(query);
+        request.setTopN(Math.min(topK, candidates.size()));
+
+        List<String> documents = new ArrayList<>();
+        for (RetrievedChunk candidate : candidates) {
+            String docText = candidate.getTitle() == null || candidate.getTitle().isBlank()
+                    ? candidate.getContent()
+                    : candidate.getTitle() + "\n" + candidate.getContent();
+            documents.add(docText);
+        }
+        request.setDocuments(documents);
+
+        RerankResponse response = client.post()
+                .uri(URI.create(ragRetrievalProperties.getRerank().getEndpoint()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(request)
+                .retrieve()
+                .body(RerankResponse.class);
+
+        if (response == null || response.getResults() == null || response.getResults().isEmpty()) {
+            throw new IllegalStateException("bge-rerank-base 返回空结果");
+        }
+
+        List<RetrievedChunk> reranked = new ArrayList<>();
+        for (RerankItem item : response.getResults()) {
+            if (item.getIndex() < 0 || item.getIndex() >= candidates.size()) {
+                continue;
+            }
+            RetrievedChunk chunk = candidates.get(item.getIndex());
+            chunk.setRerankScore(item.getScore());
+            reranked.add(chunk);
+        }
+
+        reranked.sort(Comparator.comparingDouble(RetrievedChunk::getRerankScore).reversed());
+        if (reranked.size() > topK) {
+            return new ArrayList<>(reranked.subList(0, topK));
+        }
+        return reranked;
     }
 
     private List<RetrievedChunk> fallback(List<RetrievedChunk> candidates, int topK) {
